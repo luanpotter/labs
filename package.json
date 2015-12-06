@@ -1,0 +1,9 @@
+{
+    "name": "lab-helper",
+    "description": "Helper for lab works",
+    "author": "Luan Nico <luannico27@gmail.com>",
+    "dependencies": {
+        "nerdamer": "^0.5.7"
+    },
+    "engine": "node 0.4.1"
+}
