@@ -100,7 +100,9 @@ var Env = (function () {
 	};
 
 	Env.prototype.parse = function (values) {
-
+		return values.map(function (v) {
+			return v.value + ' \pm ' + v.error + ' ' + v.multiplier;
+		}).join('\n');
 	};
 
 	Env.prototype.get = function (name) {
@@ -110,7 +112,7 @@ var Env = (function () {
 		}
 		var values = variable.formula ? ['todo'] : variable.values;
 
-		return parse(values);
+		return this.parse(values);
 	};
 
 	return Env;
