@@ -115,5 +115,11 @@ var Env = (function () {
 		return this.parse(values);
 	};
 
+	Env.prototype.deps = function (name) {
+		var variable = this.vars[name];
+		var ast = jsep(variable.formula);
+		return Exp.deps(ast);
+	};
+
 	return Env;
 })();
