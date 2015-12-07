@@ -18,6 +18,19 @@ var Env = (function () {
 		}, {});
 	};
 
+	var remove = function (arr) {
+		var what, a = arguments,
+			L = a.length,
+			ax;
+		while (L > 1 && arr.length) {
+			what = a[--L];
+			while ((ax = arr.indexOf(what)) !== -1) {
+				arr.splice(ax, 1);
+			}
+		}
+		return arr;
+	};
+
 	const UNITS = build({
 		'm': 'Metro',
 		's': 'Segundo',
@@ -55,8 +68,40 @@ var Env = (function () {
 		return unit.name === 'Grama' ? 'k' : '';
 	};
 
+	var validateName = function (name) {
+		if (!name.match(/^[_a-zA-Z]+[a-zA-Z0-9_]*$/)) {
+			throw 'Invalid variable name (must start with letter or underscore and then also allowing numbers): ' + name;
+		}
+	};
+
+	var validateDeps = function (deps) {
+		while (Object.keys(deps).length > 0) {
+			var nodeps = Object.keys(deps).find(function (k) {
+				return deps[k].length === 0;
+			});
+			if (!nodeps) {
+				throw 'Circular dependency or unknown variable found: ' + JSON.stringify(deps);
+			}
+			delete deps[nodeps];
+			Object.keys(deps).forEach(function (d) {
+				remove(deps[d], nodeps);
+			});
+		}
+	};
+
 	var Env = function (vars) {
-		this.vars = build(vars, ['name', 'unit', 'formula', 'values'], [undefined, '', undefined, []]);
+		this.vars = build(vars, ['name', 'unit', 'formula', 'values'], [undefined, '', undefined, []])
+		var deps = {};
+		Object.keys(this.vars).forEach(function (variable) {
+			validateName(variable);
+			if (this.vars[variable].formula) {
+				this.vars[variable].formula = Exp.parse(this.vars[variable].formula);
+				deps[variable] = this.vars[variable].formula.deps();
+			} else {
+				deps[variable] = [];
+			}
+		}.bind(this));
+		validateDeps(deps);
 	};
 
 	Env.prototype.addValues = function (variable, list) {
