@@ -155,9 +155,45 @@ var Env = (function () {
 		if (!variable) {
 			throw 'Variable name \'' + name + '\' not found in vars list.';
 		}
-		var values = variable.formula ? ['todo'] : variable.values;
 
-		return this.parse(values);
+		return this.parse(this.fetchValues(variable));
+	};
+
+	Env.prototype.fetchValues = function (variable) {
+		if (!variable.formula) {
+			return variable.values;
+		}
+
+		var map = {};
+		variable.formula.deps().forEach(function (dep) {
+			map[dep] = this.fetchValues(this.vars[dep]);
+		}.bind(this));
+
+		var sizes = Object.keys(map).map(function (dep) {
+			return map[dep].length;
+		}).sort();
+
+		if (sizes[0] !== sizes[sizes.length - 1]) {
+			throw 'Incompatible datasets';
+		}
+
+		var i, size = sizes[0];
+		var mapis = [];
+		for (i = 0; i < size; i++) {
+			var mapi = {};
+			Object.keys(map).forEach(function (dep) {
+				mapi[dep] = map[dep][i].value; // TODO consider multipler
+			});
+			mapis.push(mapi);
+		}
+
+		return mapis.map(function (mapi) {
+			return {
+				value: variable.formula.value(mapi),
+				error: 0, // TODO consider error!
+				multiplier: '' // TODO consider multipler
+			};
+		});
 	};
 
 	Env.prototype.deps = function (name) {
