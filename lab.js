@@ -8,28 +8,8 @@ var Env = (function () {
 		};
 	})();
 
-	var build = function (map, values, defaults) {
-		return Object.keys(map).reduce(function (result, key) {
-			result[key] = {};
-			values.forEach(function (current, i) {
-				result[key][current] = map[key][i] || (defaults ? defaults[i] : undefined);
-			});
-			return result;
-		}, {});
-	};
-
-	var remove = function (arr) {
-		var what, a = arguments,
-			L = a.length,
-			ax;
-		while (L > 1 && arr.length) {
-			what = a[--L];
-			while ((ax = arr.indexOf(what)) !== -1) {
-				arr.splice(ax, 1);
-			}
-		}
-		return arr;
-	};
+	var build = Utils.build;
+	var remove = Utils.remove;
 
 	const UNITS = build({
 		'm': 'Metro',
