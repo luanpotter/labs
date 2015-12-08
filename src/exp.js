@@ -3,6 +3,36 @@ var Exp = (function () {
 
 	var flatten = Utils.flatten;
 
+	var literal = function (value) {
+		var exp = new Expression();
+		exp.type = 'Literal';
+		exp.value = value;
+		return exp;
+	};
+
+	var identifier = function (name) {
+		var exp = new Expression();
+		exp.type = 'Identifier';
+		exp.name = name;
+		return exp;
+	};
+
+	var call = function (fn, args) {
+		if (!FNS[fn]) {
+			throw 'Unknown function/operator: ' + fn;
+		}
+		if (FNS[fn].qtds.length > 0 && !FNS[fn].qtds.includes(args.length)) {
+			throw 'Wrong amount of args for ' + fn;
+		}
+
+		var exp = new Expression();
+		exp.type = 'Call';
+		exp.fn = fn;
+		exp.args = args;
+
+		return exp;
+	};
+
 	var fn = function (func) {
 		func.qtds = [];
 		func.one = function () {
@@ -20,46 +50,30 @@ var Exp = (function () {
 		return func;
 	};
 
-	var literal = function (value) {
-		return new Expression({
-			type: 'Literal',
-			value: value,
-			raw: value.toString()
-		});
-	};
-
-	var call = function (fn, args) {
-		return new Expression({
-			type: 'Call',
-			fn: fn,
-			args: args
-		});
-	};
-
 	const FNS = {
 		'+': fn(function (args) {
 			return args.reduce(function (sum, value) {
 				return sum + value;
 			}, 0)
-		}).d(function (literal, astArgs) {
-			return call('+', astArgs.map(function (astArg) {
-				return astArg.derivative(literal);
+		}).d(function (literal, args) {
+			return call('+', args.map(function (arg) {
+				return arg.derivative(literal);
 			}));
 		}),
 		'-': fn(function (args) {
 			return args.length == 2 ? args[0] - args[1] : -args[0];
-		}).one().two().d(function (literal, astArgs) {
-			return call('-', astArgs.map(function (astArg) {
-				return astArg.derivative(literal);
+		}).one().two().d(function (literal, args) {
+			return call('-', args.map(function (arg) {
+				return arg.derivative(literal);
 			}));
 		}),
 		'*': fn(function (args) {
 			return args.reduce(function (sum, value) {
 				return sum * value;
 			}, 1);
-		}).d(function (literal, astArgs) {
-			var first = astArgs[0];
-			var rest = astArgs.length == 2 ? astArgs[1] : call('*', astArgs.slice(1));
+		}).d(function (literal, args) {
+			var first = args[0];
+			var rest = args.length == 2 ? args[1] : call('*', args.slice(1));
 			var p1 = call('*', [first.derivative(literal), rest]);
 			var p2 = call('*', [first, rest.derivative(literal)]);
 			return call('+', [p1, p2]);
@@ -78,24 +92,26 @@ var Exp = (function () {
 		}).one()
 	};
 
-	var Expression = function (ast) {
-		this.ast = ast;
-		if (this.ast.type === 'Call') {
-			if (!FNS[this.ast.fn]) {
-				throw 'Unknown function/operator: ' + this.ast.fn;
-			}
-			if (FNS[this.ast.fn].qtds.length > 0 && !FNS[this.ast.fn].qtds.includes(ast.args.length)) {
-				throw 'Wrong amount of args for ' + this.ast.fn;
-			}
-		}
+	var Expression = function () {};
+
+	Expression.prototype.isLiteral = function () {
+		return this.type === 'Literal';
+	};
+
+	Expression.prototype.isIdentifier = function () {
+		return this.type === 'Identifier';
+	};
+
+	Expression.prototype.isCall = function () {
+		return this.type === 'Call';
 	};
 
 	Expression.prototype.deps = function () {
-		if (this.ast.type === 'Identifier') {
-			return [this.ast.name];
-		} else if (this.ast.type === 'Call') {
-			return flatten(this.ast.args.map(function (ast) {
-				return ast.deps();
+		if (this.isIdentifier()) {
+			return [this.name];
+		} else if (this.isCall()) {
+			return flatten(this.args.map(function (args) {
+				return args.deps();
 			}));
 		} else {
 			return [];
@@ -103,63 +119,63 @@ var Exp = (function () {
 	};
 
 	Expression.prototype.value = function (vars) {
-		if (this.ast.type === 'Literal') {
-			return this.ast.value;
-		} else if (this.ast.type === 'Identifier') {
-			return vars[this.ast.name];
+		if (this.isLiteral()) {
+			return this.value;
+		} else if (this.isIdentifier()) {
+			return vars[this.name];
 		} else {
-			var parsedArgs = this.ast.args.map(function (arg) {
+			var parsedArgs = this.args.map(function (arg) {
 				return arg.value(vars);
 			});
-			return FNS[this.ast.fn](parsedArgs);
+			return FNS[this.fn](parsedArgs);
 		}
 	};
 
 	Expression.prototype.derivative = function (dLiteral) {
-		if (this.ast.type === 'Literal') {
+		if (this.isLiteral()) {
 			return literal(0);
-		} else if (this.ast.type === 'Identifier') {
-			return this.ast.name === dLiteral ? literal(1) : literal(0);
+		} else if (this.isIdentifier()) {
+			return this.name === dLiteral ? literal(1) : literal(0);
 		} else {
-			return FNS[this.ast.fn].derivative(dLiteral, this.ast.args);
+			return FNS[this.fn].derivative(dLiteral, this.args);
 		}
 	};
 
 	Expression.prototype.toString = function () {
-		if (this.ast.type === 'Literal') {
-			return this.ast.value.toString();
-		} else if (this.ast.type === 'Identifier') {
-			return this.ast.name;
+		if (this.isLiteral()) {
+			return this.value.toString();
+		} else if (this.isIdentifier()) {
+			return this.name;
 		} else {
-			if (this.ast.fn.length === 1) { // operator
-				if (this.ast.args.length === 1) { //unary
-					return this.ast.fn + this.ast.args[0].toString();
+			if (this.fn.length === 1) { // operator TODO lazy convention
+				if (this.args.length === 1) { //unary
+					return this.fn + this.args[0].toString();
 				}
-				return this.ast.args.map(function (ast) {
-					return ast.toString();
-				}).join(' ' + this.ast.fn + ' ');
+				return this.args.map(function (arg) {
+					return arg.toString();
+				}).join(' ' + this.fn + ' ');
 			} else { // function
-				return this.ast.fn + '(' + this.ast.args.map(function (ast) {
-					return ast.toString();
+				return this.fn + '(' + this.args.map(function (arg) {
+					return arg.toString();
 				}).join(', ') + ')';
 			}
 		}
 	};
 
 	Expression.prototype.eq = function (other) {
-		if (this.ast.type !== other.ast.type) {
+		if (this.type !== other.type) {
 			return false;
 		}
-		if (this.ast.type === 'Literal') {
-			return this.ast.value === oher.ast.value;
-		} else if (this.ast.type === 'Identifier') {
-			return this.ast.name === oher.ast.name;
+		if (this.isLiteral()) {
+			return this.value === oher.value;
+		} else if (this.isIdentifier()) {
+			return this.name === oher.name;
 		} else {
-			if (this.ast.fn !== other.ast.fn || this.ast.args.length !== other.ast.args.length) {
+			if (this.fn !== other.fn || this.args.length !== other.args.length) {
 				return false;
 			}
-			for (var i = 0; i < this.ast.args.length; i++) {
-				if (!this.ast.args[i].eq(other.ast.args[i])) {
+			for (var i = 0; i < this.args.length; i++) {
+				if (!this.args[i].eq(other.args[i])) {
 					return false;
 				}
 			}
@@ -169,39 +185,23 @@ var Exp = (function () {
 
 	var parse = function (ast) {
 		if (ast.type === 'Compound') {
-			return new Expression({
-				type: 'Call',
-				fn: DEFAULT_COMPOUND_OPERATOR,
-				args: ast.body.map(parse)
-			});
+			return call(DEFAULT_COMPOUND_OPERATOR, ast.body.map(parse));
 		} else if (ast.type === 'Identifier') {
-			return new Expression(ast);
+			return identifier(ast.name);
 		} else if (ast.type === 'Literal') {
 			if (typeof ast.value !== 'number') {
 				throw 'AST Primitives can only be numbers; found ' + ast.value;
 			}
-			return new Expression(ast);
+			return literal(ast.value);
 		} else if (ast.type === 'CallExpression') {
 			if (ast.callee.type !== 'Identifier') {
 				throw 'AST CallExpressions must have Identifier as callees; found: ' + ast.callee.type;
 			}
-			return new Expression({
-				type: 'Call',
-				fn: ast.callee.name,
-				args: ast.arguments.map(parse)
-			});
+			return call(ast.callee.name, ast.arguments.map(parse));
 		} else if (ast.type === 'UnaryExpression') {
-			return new Expression({
-				type: 'Call',
-				fn: ast.operator,
-				args: [ast.argument].map(parse)
-			});
+			return call(ast.operator, [ast.argument].map(parse));
 		} else if (ast.type === 'BinaryExpression') {
-			return new Expression({
-				type: 'Call',
-				fn: ast.operator,
-				args: [ast.left, ast.right].map(parse)
-			});
+			return call(ast.operator, [ast.left, ast.right].map(parse));
 		} else {
 			throw 'Unsupported AST expression type: ' + ast.type;
 		}
@@ -218,6 +218,9 @@ var Exp = (function () {
 		parse: function (str) {
 			return parse(jsep(str));
 		},
+		literal: literal,
+		identifier: identifier,
+		call: call,
 		Expression: Expression
 	};
 }());
