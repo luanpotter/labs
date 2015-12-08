@@ -18,11 +18,13 @@ var Exp = (function () {
 	};
 
 	var call = function (fn, args) {
+		args = Array.isArray(args) ? args : [args];
+
 		if (!FNS[fn]) {
 			throw 'Unknown function/operator: ' + fn;
 		}
 		if (FNS[fn].qtds.length > 0 && !FNS[fn].qtds.includes(args.length)) {
-			throw 'Wrong amount of args for ' + fn;
+			throw 'Wrong amount of args for ' + fn + '; found: ' + args.length;
 		}
 
 		var exp = new Expression();
@@ -43,10 +45,6 @@ var Exp = (function () {
 			this.qtds.push(2);
 			return this;
 		}.bind(func);
-		func.d = function (derivative) {
-			this.derivative = derivative;
-			return this;
-		}.bind(func);
 		return func;
 	};
 
@@ -55,28 +53,14 @@ var Exp = (function () {
 			return args.reduce(function (sum, value) {
 				return sum + value;
 			}, 0)
-		}).d(function (literal, args) {
-			return call('+', args.map(function (arg) {
-				return arg.derivative(literal);
-			}));
 		}),
 		'-': fn(function (args) {
 			return args.length == 2 ? args[0] - args[1] : -args[0];
-		}).one().two().d(function (literal, args) {
-			return call('-', args.map(function (arg) {
-				return arg.derivative(literal);
-			}));
-		}),
+		}).one().two(),
 		'*': fn(function (args) {
 			return args.reduce(function (sum, value) {
 				return sum * value;
 			}, 1);
-		}).d(function (literal, args) {
-			var first = args[0];
-			var rest = args.length == 2 ? args[1] : call('*', args.slice(1));
-			var p1 = call('*', [first.derivative(literal), rest]);
-			var p2 = call('*', [first, rest.derivative(literal)]);
-			return call('+', [p1, p2]);
 		}),
 		'/': fn(function (args) {
 			return args[0] / args[1];
@@ -89,6 +73,9 @@ var Exp = (function () {
 		}).one(),
 		'cos': fn(function (args) {
 			return Math.cos(args[0]);
+		}).one(),
+		'ln': fn(function (args) {
+			return Math.log(args[0]);
 		}).one()
 	};
 
@@ -131,17 +118,19 @@ var Exp = (function () {
 		}
 	};
 
-	Expression.prototype.derivative = function (dLiteral) {
+	Expression.prototype.toString = function () {
 		if (this.isLiteral()) {
-			return literal(0);
+			return this.value.toString();
 		} else if (this.isIdentifier()) {
-			return this.name === dLiteral ? literal(1) : literal(0);
+			return this.name;
 		} else {
-			return FNS[this.fn].derivative(dLiteral, this.args);
+			return this.fn + '(' + this.args.map(function (arg) {
+				return arg.toString();
+			}).join(', ') + ')';
 		}
 	};
 
-	Expression.prototype.toString = function () {
+	Expression.prototype.toPrettyString = function () {
 		if (this.isLiteral()) {
 			return this.value.toString();
 		} else if (this.isIdentifier()) {
@@ -149,14 +138,14 @@ var Exp = (function () {
 		} else {
 			if (this.fn.length === 1) { // operator TODO lazy convention
 				if (this.args.length === 1) { //unary
-					return this.fn + this.args[0].toString();
+					return this.fn + this.args[0].toPrettyString();
 				}
 				return this.args.map(function (arg) {
-					return arg.toString();
+					return arg.toPrettyString();
 				}).join(' ' + this.fn + ' ');
 			} else { // function
 				return this.fn + '(' + this.args.map(function (arg) {
-					return arg.toString();
+					return arg.toPrettyString();
 				}).join(', ') + ')';
 			}
 		}
