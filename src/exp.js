@@ -17,10 +17,6 @@ var Exp = (function () {
 			this.derivative = derivative;
 			return this;
 		}.bind(func);
-		func.s = function (simplifier) {
-			this.simplifier = simplifier;
-			return this;
-		}.bind(func);
 		return func;
 	};
 
@@ -40,33 +36,6 @@ var Exp = (function () {
 		});
 	};
 
-	var isMultipleOfIdentifier = function (arg) {
-		if (arg.type === 'Identifier') {
-			return true;
-		}
-		if (arg.type === 'Call' && arg.args.length === 2) {
-			var xTimesTwo = arg.args[0].ast.type === 'Identifier' && arg.args[1].ast.type === 'Literal';
-			var twoTimesX = arg.args[1].ast.type === 'Identifier' && arg.args[0].ast.type === 'Literal';
-			return xTimesTwo || twoTimesX;
-		}
-	};
-
-	var getMultiple = function (arg) {
-		if (arg.type === 'Identifier') {
-			return 1;
-		}
-		var multiple = arg.args[0].ast.type === 'Literal' ? arg.args[0] : arg.args[1];
-		return multiple.ast.value;
-	};
-
-	var getIdentifier = function (arg) {
-		if (arg.type === 'Identifier') {
-			return arg.name;
-		}
-		var identifier = arg.args[0].ast.type === 'Identifier' ? arg.args[0] : arg.args[1];
-		return identifier.ast.name;
-	};
-
 	const FNS = {
 		'+': fn(function (args) {
 			return args.reduce(function (sum, value) {
@@ -76,44 +45,6 @@ var Exp = (function () {
 			return call('+', astArgs.map(function (astArg) {
 				return astArg.derivative(literal);
 			}));
-		}).s(function (args) {
-			var newArgs = [];
-			while (args.length > 0) {
-				var exp = args.pop();
-				var arg = exp.ast;
-				if (arg.type === 'Literal') {
-					var acc = arg.value;
-					args = args.filter(function (ohterExp) {
-						var otherArg = ohterExp.ast;
-						if (otherArg.type !== 'Literal') {
-							return true;
-						}
-						acc += otherArg.value;
-						return false;
-					});
-					newArgs.push(literal(acc));
-				} else if (isMultipleOfIdentifier(arg)) {
-					var acc = getMultiple(arg);
-					args = args.filter(function (otherExp) {
-						var otherArg = otherExp.ast;
-						if (isMultipleOfIdentifier(otherArg) && getIdentifier(otherArg) === getIdentifier(arg)) {
-							acc += getMultiple(otherArg);
-							return false;
-						}
-						return true;
-					});
-					newArgs.push(acc === 1 ? exp : call('*', [literal(acc), exp]));
-				} else {
-					newArgs.push(exp);
-				}
-			}
-			newArgs = newArgs.filter(function (exp) {
-				return !(exp.ast.type === 'Literal' && exp.ast.value === 0);
-			});
-			if (newArgs.length === 1) {
-				return newArgs[0];
-			}
-			return call('+', newArgs);
 		}),
 		'-': fn(function (args) {
 			return args.length == 2 ? args[0] - args[1] : -args[0];
@@ -132,56 +63,6 @@ var Exp = (function () {
 			var p1 = call('*', [first.derivative(literal), rest]);
 			var p2 = call('*', [first, rest.derivative(literal)]);
 			return call('+', [p1, p2]);
-		}).s(function (args) {
-			var hasZeroes = args.filter(function (exp) {
-				return exp.ast.type === 'Literal' && exp.ast.value === 0;
-			}).length > 0;
-			if (hasZeroes) {
-				return literal(0);
-			}
-			var newArgs = [];
-			while (args.length > 0) {
-				var exp = args.pop();
-				var arg = exp.ast;
-				if (arg.type === 'Literal') {
-					var acc = arg.value;
-					args = args.filter(function (ohterExp) {
-						var otherArg = ohterExp.ast;
-						if (otherArg.type !== 'Literal') {
-							return true;
-						}
-						acc *= otherArg.value;
-						return false;
-					});
-					newArgs.push(literal(acc));
-				} else if (arg.type === 'Identifier') {
-					var acc = 1;
-					args = args.filter(function (otherExp) {
-						var otherArg = otherExp.ast;
-						if (otherArg.type === 'Identifier' && otherArg.name === arg.name) {
-							acc++;
-							return false;
-						}
-						return true;
-					});
-					newArgs.push(acc === 1 ? exp : call('^', [exp, literal(acc)]));
-				} else {
-					newArgs.push(exp);
-				}
-			}
-			newArgs = newArgs.filter(function (exp) {
-				return !(exp.ast.type === 'Literal' && exp.ast.value === 1);
-			});
-			var prevLength = newArgs.length;
-			newArgs = newArgs.filter(function (exp) {
-				return !(exp.ast.type === 'Literal' && exp.ast.value === -1);
-			});
-			var hasMinusOne = prevLength !== newArgs.length;
-			if (newArgs.length === 1) {
-				return hasMinusOne ? call('-', newArgs[0]) : newArgs[0];
-			}
-			var r = call('*', newArgs);
-			return hasMinusOne ? call('-', r) : r;
 		}),
 		'/': fn(function (args) {
 			return args[0] / args[1];
@@ -286,18 +167,6 @@ var Exp = (function () {
 		}
 	};
 
-
-	Expression.prototype.simplify = function () {
-		if (this.ast.type !== 'Call') {
-			return this;
-		}
-		var s = FNS[this.ast.fn].simplifier;
-		var args = this.ast.args.map(function (ast) {
-			return ast.simplify();
-		});
-		return s ? s(args) : call(this.ast.fn, args);
-	};
-
 	var parse = function (ast) {
 		if (ast.type === 'Compound') {
 			return new Expression({
@@ -338,12 +207,17 @@ var Exp = (function () {
 		}
 	};
 
-	//config
+	//config jsep
 	jsep.allowImplicitCompound = true;
+	['!', '~'].forEach(jsep.removeUnaryOp);
+	['||', '&&', '|', '^', '&', '<<', '>>', '>>>'].forEach(jsep.removeBinaryOp);
+	['==', '!=', '===', '!==', '<', '>', '<=', '>='].forEach(jsep.removeBinaryOp);
+	jsep.addBinaryOp('^', 11);
 
 	return {
 		parse: function (str) {
 			return parse(jsep(str));
-		}
+		},
+		Expression: Expression
 	};
 }());
