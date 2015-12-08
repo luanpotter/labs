@@ -52,6 +52,9 @@ var Env = (function () {
 		if (!name.match(/^[_a-zA-Z]+[a-zA-Z0-9_]*$/)) {
 			throw 'Invalid variable name (must start with letter or underscore and then also allowing numbers): ' + name;
 		}
+		if (name.startsWith('delta_')) {
+			throw 'Variable names cannot start with "delta_"; those are reserved for the errors: ' + name;
+		}
 	};
 
 	var validateDeps = function (deps) {
@@ -139,6 +142,17 @@ var Env = (function () {
 		return this.parse(this.fetchValues(variable));
 	};
 
+	Env.prototype.error = function (variable) {
+		var formula = variable.formula;
+		var exp = function (base, pow) {
+			return Exp.call('^', [base, Exp.literal(pow)]);
+		}
+		var partials = formula.deps().map(function (dep) {
+			return Exp.call('*', [exp(formula.derivative(dep), 2), exp(Exp.identifier('delta_' + dep), 2)]);
+		});
+		return exp(Exp.call('+', partials), .5);
+	};
+
 	Env.prototype.fetchValues = function (variable) {
 		if (!variable.formula) {
 			return variable.values;
@@ -162,15 +176,19 @@ var Env = (function () {
 		for (i = 0; i < size; i++) {
 			var mapi = {};
 			Object.keys(map).forEach(function (dep) {
-				mapi[dep] = map[dep][i].value; // TODO consider multipler
+				// TODO consider multipler
+				mapi[dep] = map[dep][i].value;
+				mapi['delta_' + dep] = map[dep][i].error;
 			});
 			mapis.push(mapi);
 		}
 
+		var error = this.error(variable);
+
 		return mapis.map(function (mapi) {
 			return {
-				value: variable.formula.value(mapi),
-				error: 0, // TODO consider error!
+				value: variable.formula.getValue(mapi),
+				error: error.getValue(mapi),
 				multiplier: '' // TODO consider multipler
 			};
 		});

@@ -105,14 +105,14 @@ var Exp = (function () {
 		}
 	};
 
-	Expression.prototype.value = function (vars) {
+	Expression.prototype.getValue = function (vars) {
 		if (this.isLiteral()) {
 			return this.value;
 		} else if (this.isIdentifier()) {
 			return vars[this.name];
 		} else {
 			var parsedArgs = this.args.map(function (arg) {
-				return arg.value(vars);
+				return arg.getValue(vars);
 			});
 			return FNS[this.fn](parsedArgs);
 		}

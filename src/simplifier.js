@@ -159,6 +159,11 @@
 			if (args[0].isLiteral() && args[0].value === 0) {
 				return literal(0);
 			}
+			if (args[0].isLiteral() && args[0].value % 1 === 0) {
+				if (args[1].isLiteral() && args[1].value % 1 === 0) {
+					return literal(Math.pow(args[0], args[1]));
+				}
+			}
 			return call('^', args);
 		}
 	};
