@@ -248,7 +248,6 @@ var Env = (function () {
 		}
 
 		var error = this.error(variable).simplify();
-		console.log(error.toString());
 
 		return mapis.map(function (mapi) {
 			return {
