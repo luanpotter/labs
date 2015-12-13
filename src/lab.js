@@ -122,6 +122,10 @@ var Env = (function () {
 		multiplier = multiplier || defaultMultiplier(variable.unit);
 
 		list = list.map(function (el) {
+			if (!Array.isArray(el)) {
+				el = [el];
+			}
+
 			var value = {
 				value: el[0],
 				multiplier: el[1],
@@ -135,16 +139,33 @@ var Env = (function () {
 			value.multiplier = value.multiplier || multiplier;
 			value.error = value.error || error;
 
+			console.log('asdasdsa', value);
 			return value;
 		});
 
 		this.addValues(name, list);
 	};
 
+	Env.prototype.findMultipler = function (value) {
+		var expoent = value.e;
+		return Object.values(MULTIPLIERS).sort(function (v1, v2) {
+			return parseInt(v2.multiplier) - parseInt(v1.multiplier);
+		}).find(function (v) {
+			return v.multiplier <= expoent;
+		});
+	};
+
 	Env.prototype.parse = function (values) {
 		return values.map(function (v) {
-			return v.value + ' \pm ' + v.error + ' ' + v.multiplier;
-		}).join('\n');
+			console.log(v.value.toString(), v.error.toString());
+			var multiplier = this.findMultipler(v.error);
+			var m = new Decimal(10).pow(multiplier.multiplier);
+
+			var value = v.value.dividedBy(m).toString();
+			var error = v.error.dividedBy(m).toString();
+
+			return value + ' \pm ' + error + ' ' + multiplier.key;
+		}.bind(this)).join('\n');
 	};
 
 	Env.prototype.get = function (name) {
@@ -169,7 +190,13 @@ var Env = (function () {
 
 	Env.prototype.fetchValues = function (variable) {
 		if (!variable.formula) {
-			return variable.values;
+			return variable.values.map(function (v) {
+				var m = new Decimal(10).pow(MULTIPLIERS[v.multiplier].multiplier);
+				return {
+					value: new Decimal(v.value).times(m),
+					error: new Decimal(v.error).times(m)
+				};
+			});
 		}
 
 		var map = {};
@@ -190,7 +217,6 @@ var Env = (function () {
 		for (i = 0; i < size; i++) {
 			var mapi = {};
 			Object.keys(map).forEach(function (dep) {
-				// TODO consider multipler
 				mapi[dep] = map[dep][i].value;
 				mapi['delta_' + dep] = map[dep][i].error;
 			});
@@ -202,8 +228,7 @@ var Env = (function () {
 		return mapis.map(function (mapi) {
 			return {
 				value: variable.formula.getValue(mapi),
-				error: error.getValue(mapi),
-				multiplier: '' // TODO consider multipler
+				error: error.getValue(mapi)
 			};
 		});
 	};

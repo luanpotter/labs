@@ -5,6 +5,7 @@ var Utils = {
 			values.forEach(function (current, i) {
 				result[key][current] = map[key][i] || (defaults ? defaults[i] : undefined);
 			});
+			result[key].key = key;
 			return result;
 		}, {});
 	},
@@ -82,3 +83,16 @@ if (!Array.prototype.includes) {
 		return false;
 	};
 }
+
+Object.find = function (obj, fn) {
+	var key = Object.keys(obj).find(function (k) {
+		return fn(k, obj[k]);
+	});
+	return (typeof key !== 'undefined') ? obj[key] : undefined;
+};
+
+Object.values = function (obj) {
+	return Object.keys(obj).map(function (k) {
+		return obj[k];
+	});
+};

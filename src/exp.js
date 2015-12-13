@@ -63,7 +63,7 @@ var Exp = (function () {
 			}, new Decimal(1));
 		}),
 		'/': fn(function (args) {
-			return args[0].divide(args[1]);
+			return args[0].dividedBy(args[1]);
 		}).two(),
 		'^': fn(function (args) {
 			return args[0].pow(args[1]);
