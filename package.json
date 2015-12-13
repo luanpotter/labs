@@ -3,7 +3,8 @@
 	"description": "Helper for lab works",
 	"author": "Luan Nico <luannico27@gmail.com>",
 	"dependencies": {
-		"jsep": "^0.3.0"
+		"jsep": "^0.3.0",
+		"decimal.js": "^4.0.3"
 	},
 	"engine": "node 0.4.1"
 }

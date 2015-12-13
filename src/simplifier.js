@@ -42,7 +42,7 @@
 						if (!otherArg.isLiteral()) {
 							return true;
 						}
-						acc += otherArg.value;
+						acc = acc.plus(otherArg.value);
 						return false;
 					});
 					newArgs.push(literal(acc));
@@ -50,18 +50,18 @@
 					var acc = getMultiple(arg);
 					args = args.filter(function (otherArg) {
 						if (isMultipleOfIdentifier(otherArg) && getIdentifier(otherArg) === getIdentifier(arg)) {
-							acc += getMultiple(otherArg);
+							acc = acc.plus(getMultiple(otherArg));
 							return false;
 						}
 						return true;
 					});
-					newArgs.push(acc === 1 ? arg : call('*', [literal(acc), getIdentifier(arg)]));
+					newArgs.push(acc.toNumber() === 1 ? arg : call('*', [literal(acc), getIdentifier(arg)]));
 				} else {
 					newArgs.push(arg);
 				}
 			}
 			newArgs = newArgs.filter(function (arg) {
-				return !(arg.isLiteral() && arg.value === 0);
+				return !(arg.isLiteral() && arg.value.toNumber() === 0);
 			});
 			if (newArgs.length === 1) {
 				return newArgs[0];
@@ -74,11 +74,11 @@
 		'-': function (args) {
 			if (args.length === 1) {
 				if (args[0].isLiteral()) {
-					return literal(-args[0].value);
+					return literal(args[0].value.neg());
 				}
 			} else {
 				if (args[0].isLiteral() && args[1].isLiteral()) {
-					return literal(args[0].value - args[1].value);
+					return literal(args[0].value.minus(args[1].value));
 				}
 			}
 			return call('-', args);
@@ -94,7 +94,7 @@
 			});
 			args = splat;
 			var hasZeroes = args.filter(function (arg) {
-				return arg.isLiteral() && arg.value === 0;
+				return arg.isLiteral() && arg.value.toNumber() === 0;
 			}).length > 0;
 			if (hasZeroes) {
 				return literal(0);
@@ -108,26 +108,26 @@
 						if (otherArg.type !== 'Literal') {
 							return true;
 						}
-						acc *= otherArg.value;
+						acc = acc.times(otherArg.value);
 						return false;
 					});
 					newArgs.push(literal(acc));
 				} else if (arg.isIdentifier()) {
-					var acc = 1;
+					var acc = new Decimal(1);
 					args = args.filter(function (otherArg) {
 						if (otherArg.isIdentifier() && otherArg.name === arg.name) {
-							acc++;
+							acc = acc.plus(1);
 							return false;
 						}
 						return true;
 					});
-					newArgs.push(acc === 1 ? arg : call('^', [arg, literal(acc)]));
+					newArgs.push(acc.toNumber() === 1 ? arg : call('^', [arg, literal(acc)]));
 				} else {
 					newArgs.push(arg);
 				}
 			}
 			newArgs = newArgs.filter(function (arg) {
-				return !(arg.isLiteral() && arg.value === 1);
+				return !(arg.isLiteral() && arg.value.toNumber() === 1);
 			});
 			if (newArgs.length === 1) {
 				return newArgs[0];
@@ -137,7 +137,7 @@
 			}
 			var prevLength = newArgs.length;
 			newArgs = newArgs.filter(function (arg) {
-				return !(arg.isLiteral() && arg.value === -1);
+				return !(arg.isLiteral() && arg.value.toNumber() === -1);
 			});
 			var hasMinusOne = prevLength !== newArgs.length;
 			if (newArgs.length === 1) {
@@ -147,23 +147,25 @@
 			return hasMinusOne ? call('-', r) : r;
 		},
 		'^': function (args) {
-			if (args[1].isLiteral() && args[1].value === 1) {
+			if (args[1].isLiteral() && args[1].value.toNumber() === 1) {
 				return args[0];
 			}
-			if (args[1].isLiteral() && args[1].value === 0) {
-				if (args[0].isLiteral() && args[0].value === 0) {
+			if (args[1].isLiteral() && args[1].value.toNumber() === 0) {
+				if (args[0].isLiteral() && args[0].value.toNumber() === 0) {
 					throw 'oops... 0^0...';
 				}
 				return literal(1);
 			}
-			if (args[0].isLiteral() && args[0].value === 0) {
+			if (args[0].isLiteral() && args[0].value.toNumber() === 0) {
 				return literal(0);
 			}
-			if (args[0].isLiteral() && args[0].value % 1 === 0) {
-				if (args[1].isLiteral() && args[1].value % 1 === 0) {
-					return literal(Math.pow(args[0], args[1]));
+
+			if (args[0].isLiteral() && args[0].value.isInteger()) {
+				if (args[1].isLiteral() && args[1].value.isInteger()) {
+					return literal(args[0].pow(args[1]));
 				}
 			}
+
 			return call('^', args);
 		}
 	};
