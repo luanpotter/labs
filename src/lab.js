@@ -139,7 +139,6 @@ var Env = (function () {
 			value.multiplier = value.multiplier || multiplier;
 			value.error = value.error || error;
 
-			console.log('asdasdsa', value);
 			return value;
 		});
 
@@ -157,15 +156,14 @@ var Env = (function () {
 
 	Env.prototype.parse = function (values) {
 		return values.map(function (v) {
-			console.log(v.value.toString(), v.error.toString());
 			var multiplier = this.findMultipler(v.error);
 			var m = new Decimal(10).pow(multiplier.multiplier);
 
-			var value = v.value.dividedBy(m).toString();
-			var error = v.error.dividedBy(m).toString();
+			var error = v.error.dividedBy(m).toSD(1);
+			var value = v.value.dividedBy(m);
 
-			return value + ' \pm ' + error + ' ' + multiplier.key;
-		}.bind(this)).join('\n');
+			return value.toFixed(error.decimalPlaces()) + ' \pm ' + error.toFixed() + ' ' + multiplier.key;
+		}.bind(this));
 	};
 
 	Env.prototype.get = function (name) {
@@ -174,7 +172,33 @@ var Env = (function () {
 			throw 'Variable name \'' + name + '\' not found in vars list.';
 		}
 
-		return this.parse(this.fetchValues(variable));
+		return this.parse(this.fetchValues(variable)).join('\n');
+	};
+
+	Env.prototype.table = function (names) {
+		var size;
+		var table = Utils.transpose(names.map(function (name) {
+			var variable = this.vars[name];
+			if (!variable) {
+				throw 'Variable name \'' + name + '\' not found in vars list.';
+			}
+			var values = this.fetchValues(variable);
+			if (size && values.length !== size) {
+				throw 'Incompatible variables, differente sizes!';
+			} else {
+				size = values.length;
+			}
+
+			return this.parse(values);
+		}.bind(this)));
+		table.splice(0, 0, names.map(function (name) {
+			var variable = this.vars[name];
+			var unit = this.fetchUnit(variable);
+			return variable.name + (unit == '' ? '' : ' (' + unit + ')');
+		}.bind(this)));
+		return table.map(function (row) {
+			return row.join(' & ');
+		}).join(' \\\\\n');
 	};
 
 	Env.prototype.error = function (variable) {
@@ -223,7 +247,8 @@ var Env = (function () {
 			mapis.push(mapi);
 		}
 
-		var error = this.error(variable);
+		var error = this.error(variable).simplify();
+		console.log(error.toString());
 
 		return mapis.map(function (mapi) {
 			return {
@@ -231,6 +256,19 @@ var Env = (function () {
 				error: error.getValue(mapi)
 			};
 		});
+	};
+
+	Env.prototype.fetchUnit = function (variable) {
+		if (!variable.formula) {
+			return variable.unit;
+		}
+
+		var units = {};
+		variable.formula.deps().forEach(function (dep) {
+			units[dep] = this.fetchUnit(this.vars[dep]);
+		}.bind(this));
+
+		return variable.formula.unit(units);
 	};
 
 	Env.prototype.deps = function (name) {

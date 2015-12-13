@@ -27,6 +27,14 @@ var Utils = {
 		return arr.reduce(function (flat, toFlatten) {
 			return flat.concat(Array.isArray(toFlatten) ? Utils.flatten(toFlatten) : toFlatten);
 		}, []);
+	},
+
+	transpose: function (array) {
+		return array[0].map(function (col, i) {
+			return array.map(function (row) {
+				return row[i];
+			})
+		});
 	}
 };
 
@@ -84,12 +92,20 @@ if (!Array.prototype.includes) {
 	};
 }
 
-Object.find = function (obj, fn) {
-	var key = Object.keys(obj).find(function (k) {
-		return fn(k, obj[k]);
-	});
-	return (typeof key !== 'undefined') ? obj[key] : undefined;
-};
+if (!Array.prototype.uniq) {
+	Array.prototype.uniq = function () {
+		var u = {},
+			a = [];
+		for (var i = 0, l = this.length; i < l; ++i) {
+			if (u.hasOwnProperty(this[i])) {
+				continue;
+			}
+			a.push(this[i]);
+			u[this[i]] = 1;
+		}
+		return a;
+	}
+}
 
 Object.values = function (obj) {
 	return Object.keys(obj).map(function (k) {

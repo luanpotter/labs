@@ -99,7 +99,7 @@ var Exp = (function () {
 		} else if (this.isCall()) {
 			return flatten(this.args.map(function (args) {
 				return args.deps();
-			}));
+			})).uniq();
 		} else {
 			return [];
 		}
@@ -115,6 +115,55 @@ var Exp = (function () {
 				return arg.getValue(vars);
 			});
 			return FNS[this.fn](parsedArgs);
+		}
+	};
+
+	Expression.prototype.unit = function (vars) {
+		return this._unit(vars)._purgeIdentifiers();
+	};
+
+	Expression.prototype._purgeIdentifiers = function (vars) {
+		if (this.isLiteral()) {
+			return '';
+		} else if (this.isIdentifier()) {
+			return this.name;
+		} else {
+			if (!['+', '*'].includes(this.fn)) {
+				return this.toPrettyString();
+			}
+			var args = this.args.map(function (arg) {
+				if (arg._purgeIdentifiers) {
+					return arg._purgeIdentifiers(vars);
+				}
+				return arg;
+			}).filter(function (arg) {
+				return arg !== '';
+			});
+			if (args.length === 0) {
+				return '';
+			}
+			if (args.length === 1) {
+				return args[0];
+			}
+			return call(this.fn, args).toPrettyString();
+		}
+	};
+
+	Expression.prototype._unit = function (vars) {
+		if (this.isLiteral()) {
+			return identifier('');
+		} else if (this.isIdentifier()) {
+			return identifier(vars[this.name]);
+		} else {
+			var parsedArgs = this.args.map(function (arg) {
+				return arg._unit(vars);
+			}).filter(function (arg) {
+				return arg.name !== '';
+			});
+			if (parsedArgs.length === 0) {
+				return identifier('');
+			}
+			return call(this.fn, parsedArgs).simplify();
 		}
 	};
 
@@ -142,7 +191,7 @@ var Exp = (function () {
 				}
 				return this.args.map(function (arg) {
 					return arg.toPrettyString();
-				}).join(' ' + this.fn + ' ');
+				}).join(this.fn);
 			} else { // function
 				return this.fn + '(' + this.args.map(function (arg) {
 					return arg.toPrettyString();

@@ -17,7 +17,7 @@
 
 	var getMultiple = function (arg) {
 		if (arg.isIdentifier()) {
-			return 1;
+			return new Decimal(1);
 		}
 		var multiple = arg.args[0].isLiteral() ? arg.args[0] : arg.args[1];
 		return multiple.value;
@@ -55,7 +55,7 @@
 						}
 						return true;
 					});
-					newArgs.push(acc.toNumber() === 1 ? arg : call('*', [literal(acc), getIdentifier(arg)]));
+					newArgs.push(acc.toNumber() === 1 ? arg : call('*', [literal(acc), identifier(getIdentifier(arg))]));
 				} else {
 					newArgs.push(arg);
 				}
