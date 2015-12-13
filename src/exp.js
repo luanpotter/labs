@@ -6,7 +6,7 @@ var Exp = (function () {
 	var literal = function (value) {
 		var exp = new Expression();
 		exp.type = 'Literal';
-		exp.value = value;
+		exp.value = new Decimal(value);
 		return exp;
 	};
 
@@ -51,31 +51,31 @@ var Exp = (function () {
 	const FNS = {
 		'+': fn(function (args) {
 			return args.reduce(function (sum, value) {
-				return sum + value;
-			}, 0)
+				return sum.plus(value);
+			}, new Decimal(0));
 		}),
 		'-': fn(function (args) {
-			return args.length == 2 ? args[0] - args[1] : -args[0];
+			return args.length == 2 ? args[0].minus(args[1]) : args[0].neg();
 		}).one().two(),
 		'*': fn(function (args) {
 			return args.reduce(function (sum, value) {
-				return sum * value;
-			}, 1);
+				return sum.times(value);
+			}, new Decimal(1));
 		}),
 		'/': fn(function (args) {
-			return args[0] / args[1];
+			return args[0].divide(args[1]);
 		}).two(),
 		'^': fn(function (args) {
-			return Math.pow(args[0], args[1]);
+			return args[0].pow(args[1]);
 		}).two(),
 		'sin': fn(function (args) {
-			return Math.sin(args[0]);
+			return new Decimal(Math.sin(args[0].toNumber()));
 		}).one(),
 		'cos': fn(function (args) {
-			return Math.cos(args[0]);
+			return new Decimal(Math.cos(args[0].toNumber()));
 		}).one(),
 		'ln': fn(function (args) {
-			return Math.log(args[0]);
+			return new Decimal(Math.log(args[0].toNumber()));
 		}).one()
 	};
 
@@ -109,7 +109,7 @@ var Exp = (function () {
 		if (this.isLiteral()) {
 			return this.value;
 		} else if (this.isIdentifier()) {
-			return vars[this.name];
+			return new Decimal(vars[this.name]);
 		} else {
 			var parsedArgs = this.args.map(function (arg) {
 				return arg.getValue(vars);
@@ -151,27 +151,6 @@ var Exp = (function () {
 		}
 	};
 
-	Expression.prototype.eq = function (other) {
-		if (this.type !== other.type) {
-			return false;
-		}
-		if (this.isLiteral()) {
-			return this.value === oher.value;
-		} else if (this.isIdentifier()) {
-			return this.name === oher.name;
-		} else {
-			if (this.fn !== other.fn || this.args.length !== other.args.length) {
-				return false;
-			}
-			for (var i = 0; i < this.args.length; i++) {
-				if (!this.args[i].eq(other.args[i])) {
-					return false;
-				}
-			}
-			return true;
-		}
-	};
-
 	var parse = function (ast) {
 		if (ast.type === 'Compound') {
 			return call(DEFAULT_COMPOUND_OPERATOR, ast.body.map(parse));
@@ -181,7 +160,7 @@ var Exp = (function () {
 			if (typeof ast.value !== 'number') {
 				throw 'AST Primitives can only be numbers; found ' + ast.value;
 			}
-			return literal(ast.value);
+			return literal(ast.raw);
 		} else if (ast.type === 'CallExpression') {
 			if (ast.callee.type !== 'Identifier') {
 				throw 'AST CallExpressions must have Identifier as callees; found: ' + ast.callee.type;
