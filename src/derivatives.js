@@ -27,6 +27,9 @@
 		},
 		'cos': function (args, i) {
 			return call('-', call('sin', args[i]));
+		},
+		'ln': function (args, i) {
+			return call('/', [literal(1), args[i]]);
 		}
 	};
 
