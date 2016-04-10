@@ -171,7 +171,8 @@ Env = (function() {
     };
 
     var elToLatex = function(el) {
-        return '$' + el.value + ' \pm ' + el.error + ' ' + el.multiplier + '$';
+        var m = el.multiplier ? ' ' + el.multiplier : '';
+        return '$' + el.value + ' \\pm ' + el.error + m + '$';
     };
 
     Env.prototype.get = function(name) {
@@ -203,11 +204,13 @@ Env = (function() {
     };
 
     Env.prototype.latexTable = function(names) {
-        var table = this.table(names);
+        var table = this.table(names).map(function(row) {
+            return row.map(elToLatex);
+        });
         table.splice(0, 0, names.map(function(name) {
             var variable = this.vars[name];
             var unit = this.fetchUnit(variable);
-            return variable.name + (unit == '' ? '' : ' (' + unit + ')');
+            return '$' + variable.name + (unit == '' ? '' : ' (' + unit + ')') + '$';
         }.bind(this)));
         return table.map(function(row) {
             return row.join(' & ');

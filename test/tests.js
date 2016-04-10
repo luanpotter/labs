@@ -28,5 +28,6 @@ describe('simple tests', function() {
             ]
         ];
         assert.deepEqual(result, table);
+        console.log(env.latexTable(['x', 'y']));
     });
 });
