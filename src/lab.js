@@ -22,7 +22,7 @@ Env = (function() {
         'N': ['Newton', 'kg m / s^2'],
         'J': ['Joule', 'N m'],
         'Pa': ['Pascal', 'N / m^2'],
-        'W': ['Pascal', 'J / s'],
+        'W': ['Watt', 'J / s'],
 
         'A': ['Ampère', 'C/s'],
         'V': ['Volt', 'W / A'],

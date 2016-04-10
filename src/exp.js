@@ -1,3 +1,5 @@
+Decimal.config({ ERRORS: false });
+
 Exp = (function() {
     const DEFAULT_COMPOUND_OPERATOR = '*';
 
@@ -69,13 +71,16 @@ Exp = (function() {
             return args[0].pow(args[1]);
         }).two(),
         'sin': fn(function(args) {
-            return new Decimal(Math.sin(args[0].toNumber()));
+            return Decimal.sin(args[0]);
         }).one(),
         'cos': fn(function(args) {
-            return new Decimal(Math.cos(args[0].toNumber()));
+            return Decimal.cos(args[0]);
         }).one(),
         'ln': fn(function(args) {
             return new Decimal(Math.log(args[0].toNumber()));
+        }).one(),
+        'exp': fn(function(args) {
+            return args[0].exp();
         }).one()
     };
 

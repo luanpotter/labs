@@ -28,6 +28,23 @@ describe('simple tests', function() {
             ]
         ];
         assert.deepEqual(result, table);
-        console.log(env.latexTable(['x', 'y']));
+    });
+
+    it('complex formulas', function() {
+        var env = new Env({
+            'x': ['x', 'N'],
+            'y': ['y', '', 'cos(x) + sin (x)']
+        });
+        env.add('x', [0.5], 0.05);
+        var table = env.table(['x', 'y']);
+
+        var result = [
+            [
+                { value: '0.50', error: '0.05', multiplier: '' },
+                { value: '1.36', error: '0.02', multiplier: '' }
+            ]
+
+        ];
+        assert.deepEqual(result, table);
     });
 });
