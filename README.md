@@ -28,4 +28,4 @@ They are very simple to use. Just load all files in a js enviroment, and use the
 	 */
 
 	// Display the table (return the table Latex as string)
-	env.table('Valores de...', ['n', 'x', 'f']);
+	env.table(['n', 'x', 'f']);
