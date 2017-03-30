@@ -86,14 +86,23 @@ Env = (function() {
         }
     };
 
-    var Env = function(vars) {
+    var Env = function(vars, consts) {
+        this.consts = consts ? build(consts, ['name', 'value']) : {};
         this.vars = build(vars, ['name', 'unit', 'formula', 'values'], [undefined, '', undefined, []])
         var deps = {};
         Object.keys(this.vars).forEach(function(variable) {
             validateName(variable);
+            if (this.consts[variable]) {
+                throw 'Invalid variable name, there is already a constant with that name: ' + name;
+            }
             if (this.vars[variable].formula) {
                 this.vars[variable].formula = Exp.parse(this.vars[variable].formula);
                 deps[variable] = this.vars[variable].formula.deps();
+                Object.keys(deps[variable]).forEach(function (dep) {
+                    if (this.consts[dep]) {
+                        delete deps[variable][dep];
+                    }
+                }.bind(this));
             } else {
                 deps[variable] = [];
             }
@@ -120,6 +129,7 @@ Env = (function() {
             multiplier = '';
         }
         multiplier = multiplier || defaultMultiplier(variable.unit);
+        error = error || 0;
 
         list = list.map(function(el) {
             if (!Array.isArray(el)) {

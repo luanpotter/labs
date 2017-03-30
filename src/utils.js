@@ -1,6 +1,6 @@
 Utils = {
     build: function(map, values, defaults) {
-        return Object.keys(map).reduce(function(result, key) {
+        return Object.keys(map || []).reduce(function(result, key) {
             result[key] = {};
             values.forEach(function(current, i) {
                 result[key][current] = map[key][i] || (defaults ? defaults[i] : undefined);
