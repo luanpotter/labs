@@ -14,13 +14,25 @@ EnvBuilder = (function () {
         this.vars[name] = [latex, unit, formula];
     };
 
-    EnvBuilder.prototype.constant = function (name, latex, value, error, unit) {
-        this.consts[name] = [latex, value, error, unit];
+    EnvBuilder.prototype.constantWithValue = function (name, latex, value, error, unit) {
+        this.consts[name] = {
+            name : latex,
+            value : value,
+            error : error,
+            unit : unit
+        }
+    };
+
+    EnvBuilder.prototype.constantWithFormula = function (name, latex, formula) {
+        this.consts[name] = {
+            name : latex,
+            formula : formula
+        };
     };
 
     EnvBuilder.prototype.build = function () {
         var vars = this.vars;
-        var consts = build(this.consts, ['name', 'value', 'error', 'unit'], [undefined, undefined, 0, '']);
+        var consts = this.consts;
         Object.keys(CONSTANTS).forEach(function (constant) {
             if (!(consts[constant]) && !(vars[constant])) {
                 consts[constant] = CONSTANTS[constant];

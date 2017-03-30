@@ -27,7 +27,7 @@ describe('consts', function() {
 
     it('using custom const', function() {
         var builder = new EnvBuilder();
-        builder.constant('k', 'k', 2, 0.5, 'N/m');
+        builder.constantWithValue('k', 'k', 2, 0.5, 'N/m');
         builder.var('x', 'x', 'm');
         builder.var('F', 'F', 'N', 'k*x');
         
@@ -36,6 +36,39 @@ describe('consts', function() {
         var table = env.table(['F', 'x']);
         var result = [[
             { value: '2', error: '1', multiplier: '' },
+            { value: '1.0', error: '0.5', multiplier: '' }
+        ]];
+        assert.deepEqual(result, table);
+    });
+
+    it('using derived constant', function() {
+        var builder = new EnvBuilder();
+        builder.constantWithFormula('tau', '\\tau', '2*pi');
+        builder.var('r', 'r', 'm');
+        builder.var('C', 'C', 'm', 'tau*r');
+        
+        var env = builder.build();
+        env.add('r', [1], 0.5);
+        var table = env.table(['C', 'r']);
+        var result = [[
+            { value: '6', error: '3', multiplier: '' },
+            { value: '1.0', error: '0.5', multiplier: '' }
+        ]];
+        assert.deepEqual(result, table);
+    });
+
+    it('using derived complex constant', function() {
+        var builder = new EnvBuilder();
+        builder.constantWithFormula('tau', '\\tau', '2*pi');
+        builder.constantWithFormula('zero', 'zero', 'sin(tau)');
+        builder.var('x', 'x', 'm');
+        builder.var('y', 'y', 'm', 'zero+x');
+        
+        var env = builder.build();
+        env.add('x', [1], 0.5);
+        var table = env.table(['y', 'x']);
+        var result = [[
+            { value: '1.0', error: '0.5', multiplier: '' },
             { value: '1.0', error: '0.5', multiplier: '' }
         ]];
         assert.deepEqual(result, table);

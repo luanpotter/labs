@@ -90,6 +90,18 @@ Env = (function() {
         this.consts = consts || {};
         this.vars = build(vars, ['name', 'unit', 'formula', 'values'], [undefined, '', undefined, []])
         var deps = {};
+        Object.keys(this.consts).forEach(function(constant) {
+            validateName(constant);
+            if (this.consts[constant].formula) {
+                this.consts[constant].formula = Exp.parse(this.consts[constant].formula);
+                var deps = this.consts[constant].formula.deps();
+                deps.forEach(function (dep) {
+                    if (!this.consts[dep]) {
+                        throw 'Constant ' + constant + ' depends on unknown constant: ' + dep;
+                    }
+                }.bind(this));
+            }
+        }.bind(this));
         Object.keys(this.vars).forEach(function(variable) {
             validateName(variable);
             if (this.consts[variable]) {
@@ -236,6 +248,23 @@ Env = (function() {
         return exp(Exp.call('+', partials), .5);
     };
 
+    Env.prototype.fetchConstant = function (constant) {
+        if (!constant.formula) {
+            return constant;
+        }
+        var deps = constant.formula.deps();
+        var mapi = {};
+        deps.map(function (dep) {
+            var depValue = this.fetchConstant(this.consts[dep]);
+            mapi[dep] = depValue.value;
+            mapi['delta_' + dep] = depValue.error;
+        }.bind(this));
+        return {
+            value: constant.formula.getValue(mapi),
+            error: this.error(constant).getValue(mapi)
+        };
+    };
+
     Env.prototype.fetchValues = function(variable) {
         if (!variable.formula) {
             return variable.values.map(function(v) {
@@ -250,7 +279,7 @@ Env = (function() {
         var map = {};
         variable.formula.deps().forEach(function(dep) {
             if (this.consts[dep]) {
-                map[dep] = this.consts[dep];
+                map[dep] = this.fetchConstant(this.consts[dep]);
             } else {
                 map[dep] = this.fetchValues(this.vars[dep]);
             }
