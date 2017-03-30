@@ -1,9 +1,9 @@
-var Labs = require('./labs');
+const labs = require('./labs');
 
 var assert = require('chai').assert;
 
 var m = function(v) {
-    return Labs.findMultipler(new Decimal(v));
+    return labs.Env.findMultipler(new Decimal(v));
 };
 
 describe('find multiplier', function() {

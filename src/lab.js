@@ -87,7 +87,7 @@ Env = (function() {
     };
 
     var Env = function(vars, consts) {
-        this.consts = consts ? build(consts, ['name', 'value']) : {};
+        this.consts = consts || {};
         this.vars = build(vars, ['name', 'unit', 'formula', 'values'], [undefined, '', undefined, []])
         var deps = {};
         Object.keys(this.vars).forEach(function(variable) {
@@ -98,10 +98,8 @@ Env = (function() {
             if (this.vars[variable].formula) {
                 this.vars[variable].formula = Exp.parse(this.vars[variable].formula);
                 deps[variable] = this.vars[variable].formula.deps();
-                Object.keys(deps[variable]).forEach(function (dep) {
-                    if (this.consts[dep]) {
-                        delete deps[variable][dep];
-                    }
+                deps[variable] = deps[variable].filter(function (dep) {
+                    return !this.consts[dep];
                 }.bind(this));
             } else {
                 deps[variable] = [];
@@ -251,10 +249,16 @@ Env = (function() {
 
         var map = {};
         variable.formula.deps().forEach(function(dep) {
-            map[dep] = this.fetchValues(this.vars[dep]);
+            if (this.consts[dep]) {
+                map[dep] = this.consts[dep];
+            } else {
+                map[dep] = this.fetchValues(this.vars[dep]);
+            }
         }.bind(this));
 
-        var sizes = Object.keys(map).map(function(dep) {
+        var sizes = Object.keys(map).filter(function (dep) {
+            return Array.isArray(map[dep]);
+        }).map(function(dep) {
             return map[dep].length;
         }).sort();
 
@@ -267,8 +271,9 @@ Env = (function() {
         for (i = 0; i < size; i++) {
             var mapi = {};
             Object.keys(map).forEach(function(dep) {
-                mapi[dep] = map[dep][i].value;
-                mapi['delta_' + dep] = map[dep][i].error;
+                var depOrConst = Array.isArray(map[dep]) ? map[dep][i] : map[dep];
+                mapi[dep] = depOrConst.value;
+                mapi['delta_' + dep] = depOrConst.error;
             });
             mapis.push(mapi);
         }

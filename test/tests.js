@@ -1,4 +1,5 @@
-var Env = require('./labs');
+const labs = require('./labs');
+const Env = labs.Env;
 
 var assert = require('chai').assert;
 describe('simple tests', function() {
