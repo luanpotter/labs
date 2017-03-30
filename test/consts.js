@@ -24,4 +24,20 @@ describe('consts', function() {
         ];
         assert.deepEqual(result, table);
     });
+
+    it('using custom const', function() {
+        var builder = new EnvBuilder();
+        builder.constant('k', 'k', 2, 0.5, 'N/m');
+        builder.var('x', 'x', 'm');
+        builder.var('F', 'F', 'N', 'k*x');
+        
+        var env = builder.build();
+        env.add('x', [1], 0.5);
+        var table = env.table(['F', 'x']);
+        var result = [[
+            { value: '2', error: '1', multiplier: '' },
+            { value: '1.0', error: '0.5', multiplier: '' }
+        ]];
+        assert.deepEqual(result, table);
+    });
 });

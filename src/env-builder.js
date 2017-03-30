@@ -2,7 +2,7 @@ EnvBuilder = (function () {
     const build = Utils.build;
 
     const CONSTANTS = {
-        'pi': { name : '\pi', value : Math.PI, error : 0 }
+        'pi': { name : '\pi', value : Math.PI, unit : '', error : 0 }
     };
 
     var EnvBuilder = function () {
@@ -14,17 +14,19 @@ EnvBuilder = (function () {
         this.vars[name] = [latex, unit, formula];
     };
 
-    EnvBuilder.prototype.constant = function (name, latex, value, error) {
-        this.consts[name] = [latex, value, error];
+    EnvBuilder.prototype.constant = function (name, latex, value, error, unit) {
+        this.consts[name] = [latex, value, error, unit];
     };
 
     EnvBuilder.prototype.build = function () {
+        var vars = this.vars;
+        var consts = build(this.consts, ['name', 'value', 'error', 'unit'], [undefined, undefined, 0, '']);
         Object.keys(CONSTANTS).forEach(function (constant) {
-            if (!(this.consts[constant]) && !(this.vars[constant])) {
-                this.consts[constant] = CONSTANTS[constant];
+            if (!(consts[constant]) && !(vars[constant])) {
+                consts[constant] = CONSTANTS[constant];
             }
-        }.bind(this));
-        return new Env(this.vars, this.consts);
+        });
+        return new Env(vars, consts);
     };
 
     return EnvBuilder;
