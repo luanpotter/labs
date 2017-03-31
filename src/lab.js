@@ -318,15 +318,14 @@ Env = (function() {
     };
 
     Env.prototype.fetchUnit = function(variable) {
-        return variable.unit; // TODO properly evaluate units
-
-        if (!variable.formula) {
+        if (true || !variable.formula) {
             return variable.unit;
         }
 
         var units = {};
         variable.formula.deps().forEach(function(dep) {
-            units[dep] = this.fetchUnit(this.vars[dep]);
+            var depV = this.consts[dep] || this.vars[dep];
+            units[dep] = this.fetchUnit(depV);
         }.bind(this));
 
         return variable.formula.unit(units);

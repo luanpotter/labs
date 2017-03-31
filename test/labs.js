@@ -7,4 +7,4 @@ require('../src/derivatives');
 require('../src/env-builder');
 require('../src/lab');
 
-module.exports = { Env : Env, EnvBuilder : EnvBuilder };
+module.exports = { Env : Env, EnvBuilder : EnvBuilder, Exp : Exp };
