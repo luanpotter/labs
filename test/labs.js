@@ -1,6 +1,7 @@
 jsep = require('jsep');
 Decimal = require('decimal.js');
 require('../src/utils');
+require('../src/latex');
 require('../src/exp');
 require('../src/simplifier');
 require('../src/derivatives');

@@ -190,18 +190,13 @@ Env = (function() {
         }.bind(this));
     };
 
-    var elToLatex = function(el) {
-        var m = el.multiplier ? ' ' + el.multiplier : '';
-        return '$' + el.value + ' \\pm ' + el.error + m + '$';
-    };
-
     Env.prototype.get = function(name) {
         var variable = this.vars[name];
         if (!variable) {
             throw 'Variable name \'' + name + '\' not found in vars list.';
         }
 
-        return elToLatex(this.parse(this.fetchValues(variable)).join('\n'));
+        return this.parse(this.fetchValues(variable));
     };
 
     Env.prototype.table = function(names) {
@@ -224,17 +219,7 @@ Env = (function() {
     };
 
     Env.prototype.latexTable = function(names) {
-        var table = this.table(names).map(function(row) {
-            return row.map(elToLatex);
-        });
-        table.splice(0, 0, names.map(function(name) {
-            var variable = this.vars[name];
-            var unit = this.fetchUnit(variable);
-            return '$' + variable.name + (unit == '' ? '' : ' (' + unit + ')') + '$';
-        }.bind(this)));
-        return table.map(function(row) {
-            return row.join(' & ');
-        }).join(' \\\\\n');
+        return Latex.latexTable(names, this);
     };
 
     Env.prototype.error = function(variable) {
