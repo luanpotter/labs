@@ -20,5 +20,23 @@ Latex = (function() {
         }).join(' \\\\\n');
     };
 
+    Latex.fullLatexTable = function (names, caption, ref, env) {
+        return [
+            '\\begin{longtable}[c]{|' + ' c |'.repeat(names.length) + '}',
+            '\\caption{' + caption + '\\label{tab:' + ref + '}}\\\\',
+            '\\hline',
+            names.map(n => '$' + env.name(n) + '$').join(' & ') + ' \\\\',
+            '\\hline',
+            '\\endhead',
+            '\\hline',
+            '\\endfoot',
+            '\\hline',
+            '\\caption*{ ' + names.map(n => '$' + env.name(n) + '$: desc...').join('; ') + '}',
+            '\\endlastfoot',
+            Latex.latexTable(names, env),
+            '\\end{longtable}'
+        ].join('\n');
+    };
+
     return Latex;
 })();

@@ -322,5 +322,17 @@ Env = (function() {
         return Exp.deps(ast);
     };
 
+    Env.prototype.name = function (id) {
+        return (this.vars[id] || this.constants[id]).name;
+    };
+
+    Env.prototype.desc = function (id) {
+        return (this.vars[id] || this.constants[id]).desc || 'no desc';
+    };
+
+    Env.prototype.fullLatexTable = function (names, caption, ref) {
+        return Latex.fullLatexTable(names, caption, ref, this);
+    };
+
     return Env;
 })();
