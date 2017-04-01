@@ -92,6 +92,7 @@ Env = (function() {
         var deps = {};
         Object.keys(this.consts).forEach(function(constant) {
             validateName(constant);
+            this.consts[constant].name = this.consts[constant].latexName || this.consts[constant].name || constant;
             if (this.consts[constant].formula) {
                 this.consts[constant].formula = Exp.parse(this.consts[constant].formula);
                 var deps = this.consts[constant].formula.deps();
@@ -186,7 +187,17 @@ Env = (function() {
             var error = v.error.dividedBy(m).toSD(1);
             var value = v.value.dividedBy(m);
 
-            return { value: value.toFixed(error.decimalPlaces()), error: error.toFixed(), multiplier: multiplier.key };
+            var fixedValue = value.toFixed(error.decimalPlaces());
+            if (error.gt(1)) {
+                var trailingZeroes = (/^[^0]*(0*)$/g).exec(error.toFixed())[1];
+                if (fixedValue.length <= trailingZeroes.length) {
+                    fixedValue = '0';
+                } else {
+                    fixedValue = fixedValue.substring(0, fixedValue.length - trailingZeroes.length) + trailingZeroes;
+                }
+            }
+
+            return { value: fixedValue, error: error.toFixed(), multiplier: multiplier.key };
         }.bind(this));
     };
 
