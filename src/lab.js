@@ -105,8 +105,9 @@ Env = (function() {
         }.bind(this));
         Object.keys(this.vars).forEach(function(variable) {
             validateName(variable);
+            this.vars[variable].values = this.vars[variable].values || [];
             if (this.consts[variable]) {
-                throw 'Invalid variable name, there is already a constant with that name: ' + name;
+                throw 'Invalid variable name, there is already a constant with that name: ' + variable;
             }
             if (this.vars[variable].formula) {
                 this.vars[variable].formula = Exp.parse(this.vars[variable].formula);
@@ -182,7 +183,7 @@ Env = (function() {
     Env.prototype.parse = function(values) {
         return values.map(function(v) {
             var multiplier = Env.findMultipler(v.error);
-            var m = new Decimal(10).pow(multiplier.multiplier);
+            var m = new Decimal(10).pow(parseInt(multiplier.multiplier));
 
             var error = v.error.dividedBy(m).toSD(1);
             var value = v.value.dividedBy(m);
@@ -246,7 +247,12 @@ Env = (function() {
 
     Env.prototype.fetchConstant = function (constant) {
         if (!constant.formula) {
-            return constant;
+            var ms = constant.multiplier || '';
+            var m = new Decimal(10).pow(parseInt(MULTIPLIERS[ms].multiplier));
+            return {
+                value: new Decimal(constant.value).times(m),
+                error: new Decimal(constant.error).times(m)
+            };
         }
         var deps = constant.formula.deps();
         var mapi = {};
@@ -264,7 +270,7 @@ Env = (function() {
     Env.prototype.fetchValues = function(variable) {
         if (!variable.formula) {
             return variable.values.map(function(v) {
-                var m = new Decimal(10).pow(MULTIPLIERS[v.multiplier].multiplier);
+                var m = new Decimal(10).pow(parseInt(MULTIPLIERS[v.multiplier].multiplier));
                 return {
                     value: new Decimal(v.value).times(m),
                     error: new Decimal(v.error).times(m)
