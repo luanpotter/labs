@@ -4,7 +4,7 @@ var b = new labs.EnvBuilder();
 
 b.constObj({
 	name: 'epsilon',
-	latexName: '//epsilon',
+	latexName: '\\epsilon',
 	formula: 'V/d',
 	unit: 'V/m'
 });
@@ -15,12 +15,14 @@ b.constObj({
 	value: 500,
 	error: 1
 });
+
 b.constObj({
 	name: 'd',
 	unit: 'm',
 	value: '0.0072',
 	error: '0.00001'
 });
+
 b.constObj({
 	name: 'rho',
 	latexName: '\\rho',
@@ -28,12 +30,14 @@ b.constObj({
 	value: '886',
 	error: 0
 });
+
 b.constObj({
 	name: 'g',
 	unit: 'm/s^2',
 	value: '9.887',
 	error: '0.001'
 });
+
 b.constObj({
 	name: 'b',
 	description: 'Constante de Stokes',
@@ -41,6 +45,7 @@ b.constObj({
 	value: '0.008226',
 	error: 0
 });
+
 b.constObj({
 	name: 'eta',
 	latexName: '\\eta',
@@ -50,6 +55,7 @@ b.constObj({
 	value: '18.61',
 	error: '0.01'
 });
+
 b.constObj({
 	name: 'p',
 	description: 'Pressão atmosférica na sala',
@@ -150,13 +156,11 @@ b.variableObj({
 	formula: 'm*g*(vf+vr)/(epsilon*vf)'
 });
 
-
 b.variableObj({
 	name: 'p1',
 	unit: '?',
 	formula: '(vf+vr)/vf'
 });
-
 
 b.variableObj({
 	name: 'p2',
@@ -165,7 +169,7 @@ b.variableObj({
 });
 var e = b.build();
 
-e.add('df_prime', [3], 0.05);
-e.add('dr_prime', [-1], 0.05);
+e.add('df_prime', [ 3.0,  1.0,  2.0,  5.5], 0.05);
+e.add('dr_prime', [-1.0, -2.3, -4.5, -7.0], 0.05);
 
-console.log(e.latexTable(['charge']));
+console.log(e.fullLatexTable(['vr', 'vf', 'charge'], 'Minha tabela', 'charge'));

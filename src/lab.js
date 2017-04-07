@@ -220,7 +220,7 @@ Env = (function() {
             }
             var values = this.fetchValues(variable);
             if (size && values.length !== size) {
-                throw 'Incompatible variables, differente sizes!';
+                throw 'Incompatible variables, differente sizes: ' + values.length + ' != ' + size + ' (for ' + variable.name + ').';
             } else {
                 size = values.length;
             }
@@ -347,9 +347,11 @@ Env = (function() {
         return (this.vars[id] || this.constants[id]).desc || 'no desc';
     };
 
-    Env.prototype.fullLatexTable = function (names, caption, ref) {
-        return Latex.fullLatexTable(names, caption, ref, this);
+    Env.prototype.fullLatexTable = function (names, caption, label) {
+        return Latex.fullLatexTable(names, caption, label, this);
     };
+
+    Env.MULTIPLIERS = MULTIPLIERS;
 
     return Env;
 })();
