@@ -15,4 +15,8 @@ describe('simplifier', function() {
         var exp = Exp.parse('(x^2)^2');
         assert.equal('x^4', exp.simplify().toPrettyString());
     });
+    it('product of product', function() {
+        var exp = Exp.parse('(x*y)*x');
+        assert.equal('x^2*y', exp.simplify().toPrettyString());
+    });
 });
