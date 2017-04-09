@@ -188,6 +188,10 @@ Env = (function() {
             var error = v.error.dividedBy(m).toSD(1);
             var value = v.value.dividedBy(m);
 
+            if (error.eq(0)) {
+                return { value : value.toString(), error : 0, multiplier : multiplier.key };
+            }
+
             var fixedValue = value.toFixed(error.decimalPlaces());
             if (error.gt(1)) {
                 var trailingZeroes = (/^[^0]*(0*)$/g).exec(error.toFixed())[1];
