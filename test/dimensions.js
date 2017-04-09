@@ -2,22 +2,44 @@ const labs = require('./labs');
 const Env = labs.Env;
 const EnvBuilder = labs.EnvBuilder;
 
-var assert = require('chai').assert;
+var expect = require('chai').expect;
 describe('dimensions', function() {
 
     it('simplify division', function() {
-        let a = Dimensions.simplify('V/A');
-        assert.deepEqual('\\Omega', a);
+        let unit = Dimensions.simplify('V/A');
+        expect(unit).to.equal('\\Omega');
+    });
+
+    it('simplify number', function() {
+        let unit = Dimensions.simplify('7');
+        expect(unit).to.equal('');
     });
 
     it('simplify product', function() {
-        let a = Dimensions.simplify('N * m');
-        assert.deepEqual('J', a);
+        let unit = Dimensions.simplify('N * m');
+        expect(unit).to.equal('J');
     });
 
     it('simplify complex', function() {
-        let a = Dimensions.simplify('g * (m/s^2) / (V/m)');
-        assert.deepEqual('C', a);
+        let unit = Dimensions.simplify('g * (m/s^2) / (V/m)');
+        expect(unit).to.equal('C');
     });
 
+    it('simplify sum', function() {
+        let unit = Dimensions.simplify('N * m + J - W * s');
+        expect(unit).to.equal('J');
+    });
+
+    it('incoherent sum', function() {
+        expect(() => Dimensions.simplify('N + J')).to.throw('');
+    });
+
+    it('complex exponent', function() {
+        let unit = Dimensions.simplify('(N^(2^2-1/2-(1+4)/2))^2');
+        console.log(unit);
+    });
+
+    it('incoherent exponent', function() {
+        expect(() => console.log(Dimensions.simplify('N^J'))).to.throw('');
+    });
 });
