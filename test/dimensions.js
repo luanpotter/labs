@@ -35,8 +35,8 @@ describe('dimensions', function() {
     });
 
     it('complex exponent', function() {
-        let unit = Dimensions.simplify('(N^(2^2-1/2-(1+4)/2))^2');
-        console.log(unit);
+        let unit = Dimensions.simplify('(N^(2^2-1/2-(3+2+1)/2))^2');
+        expect(unit).to.equal('N');
     });
 
     it('incoherent exponent', function() {
