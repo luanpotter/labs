@@ -177,7 +177,7 @@ Env = (function() {
             return parseInt(v2.multiplier) - parseInt(v1.multiplier);
         }).find(function(v) {
             return v.multiplier <= expoent;
-        });
+        }) || MULTIPLIERS.y;
     };
 
     Env.prototype.parse = function(values) {
