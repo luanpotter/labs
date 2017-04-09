@@ -343,12 +343,16 @@ Env = (function() {
         return Exp.deps(ast);
     };
 
+    Env.prototype.obj = function (id) {
+        return this.vars[id] || this.constants[id];
+    }
+
     Env.prototype.name = function (id) {
-        return (this.vars[id] || this.constants[id]).name;
+        return this.obj(id).name;
     };
 
     Env.prototype.desc = function (id) {
-        return (this.vars[id] || this.constants[id]).desc || 'no desc';
+        return this.obj(id).description || 'no desc';
     };
 
     Env.prototype.fullLatexTable = function (names, caption, label) {
