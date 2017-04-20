@@ -1,4 +1,4 @@
-var labs = require ('../test/labs');
+const labs = require ('../test/labs');
 
 var b = new labs.EnvBuilder();
 
@@ -67,13 +67,6 @@ b.constObj({
 });
 
 b.constObj({
-	name: 'dt',
-	unit: 's',
-	value: 2,
-	error: 0
-});
-
-b.constObj({
 	name: 'q',
 	unit: 'm',
 	multiplier: 'm',
@@ -84,8 +77,21 @@ b.constObj({
 b.constObj({
 	name: 'q_prime',
 	unit: 'cm\'',
-	value: 0.9,
+	value: 0.80,
 	error: 0.05
+});
+
+
+b.variableObj({
+	name: 'dtf',
+	latexName: '\Delta_{t_f}',
+	unit: 's'
+});
+
+b.variableObj({
+	name: 'dtr',
+	latexName: '\Delta_{t_r}',
+	unit: 's'
 });
 
 b.variableObj({
@@ -118,14 +124,14 @@ b.variableObj({
 	name: 'vf',
 	latexName: 'v_f',
 	unit: 'm/s',
-	formula: 'df/dt'
+	formula: 'df/dtf'
 });
 
 b.variableObj({
 	name: 'vr',
 	latexName: 'v_r',
 	unit: 'm/s',
-	formula: 'dr/dt'
+	formula: 'dr/dtr'
 });
 
 b.variableObj({
@@ -157,17 +163,32 @@ b.variableObj({
 	formula: 'm*g*(vf-vr)/(epsilon*vf)'
 });
 
+b.constObj({
+	name: 'e',
+	description: 'Electron\'s charge',
+	unit: 'C',
+	multiplier: 'z',
+	value: -160.21766,
+	error: 0
+});
+
+b.variableObj({
+	name: 'n',
+	unit: '',
+	formula: 'charge/e'
+});
+
 var e = b.build();
 
-e.add('df_prime', [ 1.55, 1.3, 1.2, 1, 0.9, 1.6, 1.7, 1.9, 1.6, 1.7, 1.1, 0.85, 1.5, 0.5, 0.7, 3.2, 0.85, 0.9, 3.15, 1.2, 0.7, 0.6, 1.4, 1.1, 3.2, 3, 2.4, 1.2, 0.3, 0.1 ], 0.05);
-e.add('dr_prime', [ -1.3, -1.15, -1.6, -0.4, 0.5, -1.3, 1.7, -2.3, -1.3, 1.7, -1.4, 0.7, -1.7, -1.8, -0.4, -0.8, -1.6, 0.9, -0.9, 1.2, 0.7, 2.8, 0.55, 1.1, -0.75, -1.3, 0.6, -2.9, 0, 0 ], 0.05);
+e.add('df_prime', [ 1.40, 1.40, 1.50, 1.90, 1.15, 1.45, 1.20, 1.30, 0.90, 0.95, 1.05 ]);
+e.add('dtf', [ 12.0, 7.0, 16.0, 14.0, 9.0, 8.0, 11.0, 12.0, 7.0, 10.0, 10.0 ]);
+e.add('dr_prime', [ 3.00, 4.90, 4.50, 5.85, 4.30, 2.40, 2.35, 7.80, 3.65, 2.90, 2.80 ]);
+e.add('dtr', [ 2.0, 14.0, 3.0, 2.0, 1.5, 2.5, 3.0, 6.0, 4.0, 3.0, 4.0 ]);
 
-// console.log(e.error(e.vars.charge).simplify().toString());
-
 console.log('---------------------------------------')
-console.log(e.fullLatexTable(['df_prime', 'dr_prime', 'df', 'dr'], 'Medições N', 'medicoes_n'));
+console.log(e.fullLatexTable(['df_prime', 'dr_prime', 'dtf', 'dtr', 'df', 'dr'], 'Medições M', 'medicoes_m'));
 console.log('---------------------------------------')
-console.log(e.fullLatexTable(['vr', 'vf', 'a'], 'Caracteriação N', 'caracterizacao_n'));
+console.log(e.fullLatexTable(['vr', 'vf', 'a'], 'Caracteriação M', 'caracterizacao_m'));
 console.log('---------------------------------------')
-console.log(e.fullLatexTable(['a', 'Vol', 'm', 'charge'], 'Cargas N', 'cargas_n'));
+console.log(e.fullLatexTable(['a', 'Vol', 'm', 'charge'], 'Cargas M', 'cargas_m'));
 console.log('---------------------------------------')
