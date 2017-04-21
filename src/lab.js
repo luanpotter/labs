@@ -359,6 +359,15 @@ Env = (function() {
         return Latex.fullLatexTable(names, caption, label, this);
     };
 
+    Env.prototype.originTable = function (args) {
+        let headers = args.map(arg => arg + '\te' + arg).join('\t') + '\n';
+        return headers + this.table(args).map(row => row.map(el => {
+            let ms = el.multiplier;
+            let m = new Decimal(10).pow(parseInt(MULTIPLIERS[ms].multiplier));
+            return (m*el.value) + '\t' + (m*el.error);
+        }).join("\t")).join("\n");
+    };
+
     Env.MULTIPLIERS = MULTIPLIERS;
 
     return Env;
