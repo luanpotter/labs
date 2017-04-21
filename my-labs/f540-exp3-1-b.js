@@ -1,25 +1,5 @@
 const labs = require('../test/labs');
-const plotly = require('plotly');
-const fs = require('fs');
-const _ = require('lodash');
-
-const request = require('request');
-const download = function(uri, filename, callback) {
-    request.head(uri, function(err, res, body) {
-        let r = request(uri).pipe(fs.createWriteStream(filename));
-        if (callback) {
-            r.on('close', callback);
-        }
-    });
-};
-
-
-const build = cb => {
-    fs.readFile(require('os').homedir() + '/.plotly.data', 'utf8', function(err, data) {
-        let a = data.trim().split(':');
-        cb(plotly(a[0], a[1]));
-    });
-};
+const plot = require('../src/plot');
 
 const erro_r = rs => rs.map(r => [r, 0.01 * r + 1]);
 const erro_v = vs => vs.map(v => [v, 0.02 * v + .05 * .01]);
@@ -55,27 +35,4 @@ console.log(e.fullLatexTable(['i_ce', 'i_dec'], 'nome', 'label'));
 console.log('origin');
 console.log(e.originTable(['i_ce', 'i_dec']));
 
-let table = _.unzip(e.originTable(['i_dec', 'i_ce']).split('\n').slice(1).map(a => a.split('\t')));
-var data = [{
-    x: table[0],
-    y: table[2],
-    mode: 'markers',
-    error_x: {
-        type: "data",
-        array: table[1],
-        visible: true
-    },
-    error_y: {
-        type: "data",
-        array: table[3],
-        visible: true
-    },
-    type: "scatter"
-}];
-var graphOptions = { filename: "basic-error-bar", fileopt: "overwrite" };
-
-build(plotly => {
-    plotly.plot(data, graphOptions, function(error, data) {
-        download(data.url + '.png', 'chart.png');
-    });
-});
+plot.plot(e, ['i_ce', 'i_dec'], 'beta');
