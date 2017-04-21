@@ -12,7 +12,6 @@ const download = (uri, filename, callback) => {
     });
 };
 
-
 const build = cb => {
     fs.readFile(require('os').homedir() + '/.plotly.data', 'utf8', function(err, data) {
         let a = data.trim().split(':');
