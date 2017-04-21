@@ -3,8 +3,11 @@
     "description": "Helper for lab works",
     "author": "Luan Nico <luannico27@gmail.com>",
     "dependencies": {
+        "decimal.js": "^5.0.5",
         "jsep": "^0.3.0",
-        "decimal.js": "^5.0.5"
+        "lodash": "^4.17.4",
+        "plotly": "^1.0.6",
+        "request": "^2.81.0"
     },
     "engine": "node 0.4.1",
     "devDependencies": {
@@ -12,6 +15,6 @@
         "mocha": "^2.4.5"
     },
     "scripts": {
-        "test" : "mocha"
+        "test": "mocha"
     }
 }
