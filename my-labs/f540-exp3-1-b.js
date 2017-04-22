@@ -1,7 +1,7 @@
 const labs = require('../test/labs');
 const plot = require('../src/plot');
 
-const erro_r = rs => rs.map(r => [r, 0.01 * r + 1]);
+const erro_r = rs => rs.map(r => [r, 0.01 * r + .001]);
 const erro_v = vs => vs.map(v => [v, 0.02 * v + .05 * .01]);
 
 let rs = erro_r([9.9, 19.8, 49.5, 98.3, 195.2, 391, 686]);
@@ -30,9 +30,4 @@ e.add('r_dec', rs, 'k');
 e.add('v_dec', vdec);
 e.add('v_ce', vce);
 
-console.log('latex');
-console.log(e.fullLatexTable(['i_ce', 'i_dec'], 'nome', 'label'));
-console.log('origin');
-console.log(e.originTable(['i_ce', 'i_dec']));
-
-plot.plot(e, ['i_ce', 'i_dec'], 'beta');
+plot.fullPlot(e, ['i_ce', 'i_dec'], 'results', 'I_{CE} por I_{DEC}', 'beta');
