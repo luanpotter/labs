@@ -1,0 +1,20 @@
+{
+  "name": "labs-fitter",
+  "version": "1.0.0",
+  "description": "Least Square Method (or MMQ) with error propagation.",
+  "main": "src/index.js",
+  "repository": "github.com/luanpotter/labs",
+  "author": "Luan Nico",
+  "license": "MIT",
+  "dependencies": {
+    "decimal.js": "^7.2.0",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.4.5"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
