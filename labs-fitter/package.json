@@ -1,6 +1,6 @@
 {
   "name": "labs-fitter",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Least Square Method (or MMQ) with error propagation.",
   "main": "src/index.js",
   "repository": "github.com/luanpotter/labs",
