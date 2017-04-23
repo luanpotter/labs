@@ -1,0 +1,13 @@
+{
+  "name": "labs-integration",
+  "version": "1.0.0",
+  "description": "All Labs features integrated",
+  "main": "src/index.js",
+  "repository": "github.com/luanpotter/labs",
+  "author": "Luan Nico",
+  "license": "MIT",
+  "dependencies": {
+    "labs-fitter": "^0.1.1",
+    "labs-plot": "^0.1.3"
+  }
+}
