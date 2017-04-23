@@ -1,5 +1,9 @@
 const plot = require('labs-plot');
 const fitter = require('labs-fitter');
+const { Exp, Dimension } = require('labs-core');
+const Env = require('./env');
+const EnvBuilder = require('./env-builder');
+const Guide = require('./guide');
 
 const plotWithFit = (e, columns, fit, name, cb) => {
     if (columns.length != 2) {
@@ -20,4 +24,8 @@ const fullPlot = (e, columns, resultFolder, name, label) => {
     });
 };
 
-module.exports = { fullPlot };
+Env.prototype.plot = function (columns, resultFolder, name, label) {
+  fullPlot(this, columns, resultFolder, name, label);
+};
+
+module.exports = { Env, EnvBuilder, Guide, Exp, Dimension, plot, fitter };

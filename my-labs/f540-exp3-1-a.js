@@ -1,4 +1,7 @@
 const labs = require ('../test/labs');
+const EnvBuilder = labs.EnvBuilder;
+
+(function () {
 
 const erro_r = rs => rs.map(r => [r, 0.01*r + 1]);
 const erro_v = vs => vs.map(v => [v, 0.02*v + .05*.01]);
@@ -9,7 +12,7 @@ var vs_15kohm = erro_v([ 9.4, 9.39, 9.32, 9.25, 8.81, 8.3, 8.06, 7.08, 6.32, 5.7
 var vs_18kohm = erro_v([ 9.05, 9.04, 8.98, 8.91, 8.51, 8.03, 7.81, 6.89, 6.17, 5.61, 5.16, 4.79, 4.52, 4.32, 4.17, 4.04 ]);
 
 let create = () => {
-	var b = new labs.EnvBuilder();
+	var b = new EnvBuilder();
 
 	b.constObj({ name: 'vcc', latexName: 'V_{CC}', unit : 'V', value: 15, error: 0 });
 
@@ -36,7 +39,7 @@ let runForVs = (a, vs) => {
 runForVs('10kohm', vs_10kohm);
 runForVs('15kohm', vs_15kohm);
 runForVs('18kohm', vs_18kohm);
-
+});
 console.log('origin');
 let asd = lines
 	.map(line => line.split('\n'))

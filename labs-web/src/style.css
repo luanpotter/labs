@@ -1,0 +1,30 @@
+body {
+    background-color: gray;
+}
+
+#input {
+    background-color: black;
+    color: gray;
+    font-family: monospace;
+    line-height: 1em;
+    font-size: 11px;
+    width: 80%;
+    border: 0;
+}
+
+#input:focus {
+    outline-width: 0;
+    border: 0;
+}
+
+.in {
+    color: gray;
+}
+
+.out {
+    color: white;
+}
+
+.err {
+    color: red;
+}

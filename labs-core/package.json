@@ -1,16 +1,15 @@
 {
-  "name": "labs-integration",
-  "version": "0.1.2",
-  "description": "All Labs features integrated",
+  "name": "labs-core",
+  "version": "0.2.5",
+  "description": "Core classes to Labs : expression, dimensions, multipliers, et cetera.",
   "main": "src/index.js",
   "repository": "github.com/luanpotter/labs",
   "author": "Luan Nico",
   "license": "MIT",
   "dependencies": {
-    "chai": "^3.5.0",
-    "labs-core": "^0.2.4",
-    "labs-fitter": "^0.1.1",
-    "labs-plot": "^0.1.3"
+    "decimal.js": "^7.2.0",
+    "labs-jsep": "^0.1.0",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
