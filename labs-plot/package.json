@@ -1,0 +1,14 @@
+{
+  "name": "labs-plot",
+  "version": "1.0.0",
+  "description": "Plot charts using the plot.ly API",
+  "main": "src/index.js",
+  "repository": "github.com/luanpotter/labs",
+  "author": "Luan Nico",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "plotly": "^1.0.6",
+    "request": "^2.81.0"
+  }
+}
