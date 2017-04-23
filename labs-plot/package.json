@@ -1,6 +1,6 @@
 {
   "name": "labs-plot",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Plot charts using the plot.ly API",
   "main": "src/index.js",
   "repository": "github.com/luanpotter/labs",
