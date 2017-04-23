@@ -20,8 +20,8 @@ const build = cb => {
     });
 };
 
-const plot = (table, names, fit, cb) => {
-    let table = _.unzip(table.split('\n').slice(1).map(a => a.split('\t')));
+const plot = (originTable, names, fit, cb) => {
+    let table = _.unzip(originTable.split('\n').slice(1).map(a => a.split('\t')));
     let traces = [];
     traces.push({
         x: table[0],
