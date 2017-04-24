@@ -13,14 +13,6 @@ const fullSum = (size, ...data) => {
     return [...Array(size).keys()].map(i => data.map(d => d(i)).reduce(times, ONE)).reduce(plus);
 };
 
-// TODO this should live in labs-integration
-const fitLinEnv = (env, xKey, yKey) => {
-    const data = id => env.fetchValues(env.obj(id));
-    const yv = data(yKey);
-    const xv = data(xKey);
-    return fitLin(xv, yv);
-};
-
 const fitLin = (xv, yv) => {
     const N = xv.length;
     if (N !== yv.length) {
@@ -45,4 +37,4 @@ const fitLin = (xv, yv) => {
     return [{ value: a, error: da }, { value: b, error: db }];
 };
 
-module.exports = { fitLin, fitLinEnv };
+module.exports = { fitLin };

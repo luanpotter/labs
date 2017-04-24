@@ -20,7 +20,7 @@
     "browser-request": "^0.3.3",
     "decimal.js": "^7.2.0",
     "jquery": "^3.2.1",
-    "labs-integration": "^0.1.4",
+    "labs-integration": "^0.1.16",
     "memory-fs": "^0.4.1"
   }
 }

@@ -1,0 +1,12 @@
+{
+  "name": "my-labs",
+  "version": "1.0.0",
+  "description": "Some of my labs as examples",
+  "main": "index.js",
+  "repository": {},
+  "author": "Luan Nico",
+  "license": "MIT",
+  "dependencies": {
+    "labs-integration": "^0.1.17"
+  }
+}

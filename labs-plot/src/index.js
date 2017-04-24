@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+const Decimal = require('decimal.js');
 const plotly = require('plotly');
 const request = require('request');
 const _ = require('lodash');
@@ -20,7 +21,7 @@ const build = cb => {
     });
 };
 
-const plot = (originTable, names, fit, cb) => {
+const plot = (originTable, names, fit, name, cb) => {
     let table = _.unzip(originTable.split('\n').slice(1).map(a => a.split('\t')));
     let traces = [];
     traces.push({
@@ -55,8 +56,8 @@ const plot = (originTable, names, fit, cb) => {
         filename: 'labs-chart',
         fileopt: 'overwrite',
         layout: {
-            xaxis: title(names[0]),
-            yaxis: title(names[1])
+            xaxis: names[0],
+            yaxis: names[1]
         }
     };
     build(plotly => {

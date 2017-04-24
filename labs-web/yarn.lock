@@ -1337,30 +1337,31 @@ labs-core@^0.3.1:
     labs-jsep "^0.1.0"
     lodash "^4.17.4"
 
-labs-fitter@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/labs-fitter/-/labs-fitter-0.1.1.tgz#fe4dbd32d9017b90387bbc2cbae375d785ad2720"
+labs-fitter@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/labs-fitter/-/labs-fitter-0.1.2.tgz#b96d113f9161dbeee6f2ffc3d46b8ad1d55a6738"
   dependencies:
     decimal.js "^7.2.0"
     lodash "^4.17.4"
 
-labs-integration@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.4.tgz#16a6b008df76c26905b101195c59537f218e8186"
+labs-integration@^0.1.16:
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.17.tgz#60a6b05180f5d6f3fe1637688f9ac78f839a82c5"
   dependencies:
     chai "^3.5.0"
     labs-core "^0.3.1"
-    labs-fitter "^0.1.1"
-    labs-plot "^0.1.3"
+    labs-fitter "^0.1.2"
+    labs-plot "^0.1.8"
 
 labs-jsep@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/labs-jsep/-/labs-jsep-0.1.0.tgz#ecc97573630334d5a03568fadb5aad8a37895b35"
 
-labs-plot@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/labs-plot/-/labs-plot-0.1.3.tgz#aa2b78d9eb37a6a9d49da64409741b8499eab39e"
+labs-plot@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/labs-plot/-/labs-plot-0.1.8.tgz#112219834614d379994bc5074ebe7422319bb7ad"
   dependencies:
+    decimal.js "^7.2.0"
     lodash "^4.17.4"
     plotly "^1.0.6"
     request "^2.81.0"

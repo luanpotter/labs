@@ -1,5 +1,4 @@
-const labs = require('../test/labs');
-const plot = require('../src/plot');
+const { EnvBuilder } = require('labs-integration');
 
 const erro_r = rs => rs.map(r => [r, 0.01 * r + .001]);
 const erro_v = vs => vs.map(v => [v, 0.02 * v + .05 * .01]);
@@ -9,7 +8,7 @@ let vdec = erro_v([0.42, 0.45, 0.47, 0.48, 0.49, 0.5, 0.51]);
 let vce = erro_v([2.71, 3.04, 3.23, 3.29, 3.32, 3.31, 3.33]);
 
 let create = () => {
-    let b = new labs.EnvBuilder();
+    let b = new EnvBuilder();
 
     b.constObj({ name: 'v_cc', latexName: 'V_{CC}', unit: 'V', value: 15, error: 0 });
     b.constObj({ name: 'r4', latexName: 'R_4', unit: '\\Omega', value: 1, multiplier: 'k', error: 0 });
@@ -30,4 +29,4 @@ e.add('r_dec', rs, 'k');
 e.add('v_dec', vdec);
 e.add('v_ce', vce);
 
-plot.fullPlot(e, ['i_ce', 'i_dec'], 'results', 'I_{CE} por I_{DEC}', 'beta');
+e.plot(['i_ce', 'i_dec'], 'results', 'I_{CE} por I_{DEC}', 'beta');

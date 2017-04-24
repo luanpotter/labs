@@ -1,6 +1,6 @@
 {
   "name": "labs-integration",
-  "version": "0.1.4",
+  "version": "0.1.17",
   "description": "All Labs features integrated",
   "main": "src/index.js",
   "repository": "github.com/luanpotter/labs",
@@ -9,8 +9,8 @@
   "dependencies": {
     "chai": "^3.5.0",
     "labs-core": "^0.3.1",
-    "labs-fitter": "^0.1.1",
-    "labs-plot": "^0.1.3"
+    "labs-fitter": "^0.1.2",
+    "labs-plot": "^0.1.8"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",

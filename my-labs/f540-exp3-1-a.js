@@ -1,7 +1,5 @@
-const labs = require ('../test/labs');
+const labs = require ('labs-integration');
 const EnvBuilder = labs.EnvBuilder;
-
-(function () {
 
 const erro_r = rs => rs.map(r => [r, 0.01*r + 1]);
 const erro_v = vs => vs.map(v => [v, 0.02*v + .05*.01]);
@@ -39,7 +37,7 @@ let runForVs = (a, vs) => {
 runForVs('10kohm', vs_10kohm);
 runForVs('15kohm', vs_15kohm);
 runForVs('18kohm', vs_18kohm);
-})();
+
 console.log('origin');
 let asd = lines
 	.map(line => line.split('\n'))
