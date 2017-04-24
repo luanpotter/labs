@@ -39,7 +39,7 @@ let runForVs = (a, vs) => {
 runForVs('10kohm', vs_10kohm);
 runForVs('15kohm', vs_15kohm);
 runForVs('18kohm', vs_18kohm);
-});
+})();
 console.log('origin');
 let asd = lines
 	.map(line => line.split('\n'))

@@ -1,5 +1,6 @@
-const { Exp, Dimensions, Util } = require('labs-core');
-const UNITS = Dimensions.UNITS;
+const { Exp, Dimensions, Multipliers, Util } = require('labs-core');
+const { UNITS } = Dimensions;
+const { MULTIPLIERS } = Multipliers;
 const Latex = require('./latex');
 const _ = require('lodash');
 const Decimal = require('decimal.js');
@@ -16,31 +17,6 @@ let Env = (function() {
 
     var build = Util.build;
     var remove = Util.remove;
-
-    const MULTIPLIERS = build({
-        'H': ['+27', 'Hella'],
-        'Y': ['+24', 'Yotta'],
-        'Z': ['+21', 'Zetta'],
-        'E': ['+18', 'Exa'],
-        'P': ['+15', 'Peta'],
-        'T': ['+12', 'Tera'],
-        'G': ['+9', 'Giga'],
-        'M': ['+6', 'Mega'],
-        'k': ['+3', 'Kilo'],
-        'h': ['+2', 'Hecto'],
-        'da': ['+1', 'Deca'],
-        '': ['0', ''],
-        'd': ['-1', 'Deci'],
-        'c': ['-2', 'Centi'],
-        'm': ['-3', 'Mili'],
-        '\\mu': ['-6', 'Micro'],
-        'n': ['-9', 'Nano'],
-        'p': ['-12', 'Pico'],
-        'f': ['-15', 'Femto'],
-        'a': ['-18', 'Atto'],
-        'z': ['-21', 'Zepto'],
-        'y': ['-24', 'Yocto']
-    }, ['multiplier', 'name']);
 
     var defaultMultiplier = function(unit) {
         return unit.name === 'Grama' ? 'k' : '';
@@ -157,7 +133,7 @@ let Env = (function() {
             // prioritize no multiplier for nicer looking tables
             return MULTIPLIERS[''];
         }
-        return Object.keys(MULTIPLIERS).map(e => MULTIPLIERS[e]).sort(function(v1, v2) {
+        return Util.values(MULTIPLIERS).sort(function(v1, v2) {
             return parseInt(v2.multiplier) - parseInt(v1.multiplier);
         }).find(function(v) {
             return v.multiplier <= expoent;

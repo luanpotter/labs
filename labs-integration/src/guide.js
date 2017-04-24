@@ -1,4 +1,5 @@
 const EnvBuilder = require('./env-builder');
+const { Util } = require('labs-core');
 
 let Guide = function () {
     const CONST_CYCLE = [
@@ -106,7 +107,7 @@ let Guide = function () {
                 console.log(this._e);
                 console.log(this._e.vars);
                 console.log(this._e.vars.filter);
-                this._acquisition = Utils.flatten(this._valuesToAdd = Object.values(this._e.vars).filter(function (v) {
+                this._acquisition = Utils.flatten(this._valuesToAdd = Util.values(this._e.vars).filter(function (v) {
                     return !v.formula;
                 }).map(function (v) {
                     return [ 'Add the values for variable ' + v.name, v.name];

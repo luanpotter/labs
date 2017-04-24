@@ -1,4 +1,6 @@
 const _ = require('lodash');
+const { MULTIPLIERS } = require('labs-core').Multipliers;
+const { Util } = require('labs-core');
 
 let Latex = (function() {
     var Latex = {};
@@ -8,8 +10,8 @@ let Latex = (function() {
     };
 
     const mix = function(m, dm) {
-        let mm = Env.MULTIPLIERS[m].multiplier - Env.MULTIPLIERS[dm].multiplier;
-        return Object.values(Env.MULTIPLIERS).find(e => e.multiplier == mm).name;
+        let mm = MULTIPLIERS[m].multiplier - MULTIPLIERS[dm].multiplier;
+        return Util.values(MULTIPLIERS).find(e => e.multiplier == mm).name;
     };
 
     const findDm = function(row) {

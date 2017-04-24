@@ -21,7 +21,7 @@ let config = {
     alias: {
       request: "browser-request",
       fs: "memory-fs",
-      "decimal.js": "decimal.js"
+      "decimal.js": path.resolve(__dirname, 'src/decimal-fix.js')
     },
   },
   plugins:[new HtmlWebpackPlugin()]

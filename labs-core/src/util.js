@@ -29,4 +29,8 @@ const remove = function(arr) {
     return arr;
 };
 
-module.exports = { build, remove };
+const values = function (obj) {
+    return Object.keys(obj).map(e => obj[e]);
+};
+
+module.exports = { build, remove, values };

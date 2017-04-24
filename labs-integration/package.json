@@ -1,6 +1,6 @@
 {
   "name": "labs-integration",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "All Labs features integrated",
   "main": "src/index.js",
   "repository": "github.com/luanpotter/labs",
@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "chai": "^3.5.0",
-    "labs-core": "^0.2.4",
+    "labs-core": "^0.3.1",
     "labs-fitter": "^0.1.1",
     "labs-plot": "^0.1.3"
   },

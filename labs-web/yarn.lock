@@ -671,14 +671,6 @@ decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
-decimal.js-light@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/decimal.js-light/-/decimal.js-light-2.2.2.tgz#bf9905ae4bb13ab219c6fa11ba52005fd2a48daa"
-
-decimal.js@^5.0.5:
-  version "5.0.8"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-5.0.8.tgz#b48c3fb7d73a2d4d4940e0b38f1cd21db5b367ce"
-
 decimal.js@^7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-7.2.0.tgz#abb95d934f527664256ba213087f013f3cdc4fdf"
@@ -1337,9 +1329,9 @@ kind-of@^3.0.2:
   dependencies:
     is-buffer "^1.0.2"
 
-labs-core@^0.2.4:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/labs-core/-/labs-core-0.2.5.tgz#1e43bee27fce7879a376f4cc94d2c92a7eb17c77"
+labs-core@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/labs-core/-/labs-core-0.3.1.tgz#3cfe26501d65a7c819e8af3761de155076c3e46f"
   dependencies:
     decimal.js "^7.2.0"
     labs-jsep "^0.1.0"
@@ -1352,12 +1344,12 @@ labs-fitter@^0.1.1:
     decimal.js "^7.2.0"
     lodash "^4.17.4"
 
-labs-integration@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.2.tgz#bb1d9fa6215a76fb60351b2ffdf8c0c042e01d85"
+labs-integration@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.4.tgz#16a6b008df76c26905b101195c59537f218e8186"
   dependencies:
     chai "^3.5.0"
-    labs-core "^0.2.4"
+    labs-core "^0.3.1"
     labs-fitter "^0.1.1"
     labs-plot "^0.1.3"
 
