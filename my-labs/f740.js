@@ -1,4 +1,4 @@
-var labs = require ('../test/labs');
+var labs = require ('labs');
 
 var b = new labs.EnvBuilder();
 

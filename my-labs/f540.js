@@ -1,4 +1,4 @@
-var labs = require ('./labs');
+var labs = require ('labs');
 
 var b = new labs.EnvBuilder();
 
@@ -58,15 +58,6 @@ var b = c2.fullLatexTable(['r', 'vm', 'im', 'vr', 'ir'], 'Para o circuito 2', 'i
 
 var args = ['vm', 'im', 'vr', 'ir'];
 
-const toOrigin = (args) => {
-	var headers = args.map(arg => arg + '\te' + arg).join('\t') + '\n';
-	return headers + c2.table(args).map(row => row.map(el => {
-    	var ms = el.multiplier;
-    	var m = new Decimal(10).pow(parseInt(labs.Env.MULTIPLIERS[ms].multiplier));
-		return (m*el.value) + '\t' + (m*el.error);
-	}).join("\t")).join("\n");
-};
-
-var c = toOrigin(args);
+var c = c2.originTable(args);
 
 console.log(b);

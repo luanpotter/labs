@@ -1,4 +1,4 @@
-const labs = require ('../test/labs');
+const labs = require ('labs');
 
 var b = new labs.EnvBuilder();
 

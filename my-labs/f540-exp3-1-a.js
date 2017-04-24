@@ -1,4 +1,4 @@
-const labs = require ('labs-integration');
+const labs = require ('labs');
 const EnvBuilder = labs.EnvBuilder;
 
 const erro_r = rs => rs.map(r => [r, 0.01*r + 1]);

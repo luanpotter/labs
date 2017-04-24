@@ -6,8 +6,10 @@ This simple set of js scripts can help you to write your Latex Lab Report.
 
 They are very simple to use. Just load all files in a js enviroment, and use the following commands to setup:
 
+	const { Env, EnvBuilder } = require('labs');
+
 	// Create a new env
-	env = new Env({
+	let env = new Env({
 		n: ['N'],
 		x: ['x', 'm'],
 		mu: ['\\mu', 'm', 'x * n']

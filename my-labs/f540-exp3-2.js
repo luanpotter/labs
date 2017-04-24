@@ -1,4 +1,4 @@
-const labs = require ('../test/labs');
+const labs = require ('labs');
 
 const erro_r = rs => rs.map(r => [r, 0.01*r + 1]);
 const erro_v = vs => vs.map(v => [v, 0.02*v + .05*.01]);

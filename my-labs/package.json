@@ -7,6 +7,6 @@
   "author": "Luan Nico",
   "license": "MIT",
   "dependencies": {
-    "labs-integration": "^0.1.17"
+    "labs": "^0.1.0"
   }
 }
