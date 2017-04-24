@@ -1,4 +1,4 @@
-const { Env, EnvBuilder, Guide } = require('labs-integration');
+const { Env, EnvBuilder, Guide } = require('labs');
 const jQuery = require('jquery');
 
 const terminalHtml = require('./terminal.html');
