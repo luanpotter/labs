@@ -1344,7 +1344,7 @@ labs-fitter@^0.1.2:
     decimal.js "^7.2.0"
     lodash "^4.17.4"
 
-labs-integration@^0.1.16, labs-integration@^0.1.17:
+labs-integration@^0.1.17:
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.17.tgz#60a6b05180f5d6f3fe1637688f9ac78f839a82c5"
   dependencies:
@@ -1366,9 +1366,9 @@ labs-plot@^0.1.8:
     plotly "^1.0.6"
     request "^2.81.0"
 
-labs@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/labs/-/labs-0.1.0.tgz#2f8a817737e0cadfd7af4c58a2dfda06095b09ae"
+labs@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/labs/-/labs-2.0.0.tgz#108d21927f3f02a2305789f33285521348b30605"
   dependencies:
     labs-integration "^0.1.17"
 
