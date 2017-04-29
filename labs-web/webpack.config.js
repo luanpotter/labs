@@ -24,7 +24,7 @@ let config = {
       "decimal.js": path.resolve(__dirname, 'src/decimal-fix.js')
     },
   },
-  plugins:[new HtmlWebpackPlugin()]
+  plugins:[new HtmlWebpackPlugin({ title : 'Labs' })]
 };
 
 module.exports = config;
