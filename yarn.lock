@@ -221,22 +221,22 @@ labs-fitter@^0.1.2:
     decimal.js "^7.2.0"
     lodash "^4.17.4"
 
-labs-integration@^0.1.17:
-  version "0.1.17"
-  resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.17.tgz#60a6b05180f5d6f3fe1637688f9ac78f839a82c5"
+labs-integration@^0.1.19:
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/labs-integration/-/labs-integration-0.1.19.tgz#338471179c81cecea20c7d2c060676128ce45c89"
   dependencies:
     chai "^3.5.0"
     labs-core "^0.3.1"
     labs-fitter "^0.1.2"
-    labs-plot "^0.1.8"
+    labs-plot "^0.1.10"
 
 labs-jsep@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/labs-jsep/-/labs-jsep-0.1.0.tgz#ecc97573630334d5a03568fadb5aad8a37895b35"
 
-labs-plot@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/labs-plot/-/labs-plot-0.1.8.tgz#112219834614d379994bc5074ebe7422319bb7ad"
+labs-plot@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/labs-plot/-/labs-plot-0.1.10.tgz#729334d44f04ad650ac5921f29276d787fa79a88"
   dependencies:
     decimal.js "^7.2.0"
     lodash "^4.17.4"

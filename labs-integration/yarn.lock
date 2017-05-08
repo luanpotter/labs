@@ -273,9 +273,9 @@ labs-jsep@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/labs-jsep/-/labs-jsep-0.1.0.tgz#ecc97573630334d5a03568fadb5aad8a37895b35"
 
-labs-plot@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/labs-plot/-/labs-plot-0.1.8.tgz#112219834614d379994bc5074ebe7422319bb7ad"
+labs-plot@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/labs-plot/-/labs-plot-0.1.10.tgz#729334d44f04ad650ac5921f29276d787fa79a88"
   dependencies:
     decimal.js "^7.2.0"
     lodash "^4.17.4"

@@ -7,6 +7,8 @@
   "author": "Luan Nico",
   "license": "MIT",
   "dependencies": {
-    "labs": "^0.1.0"
+    "jimp": "^0.2.27",
+    "labs": "2.0.2",
+    "linear-solve": "^1.2.1"
   }
 }

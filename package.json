@@ -1,12 +1,12 @@
 {
   "name": "labs",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Helper script for making Lab Reports Edit",
   "main": "index.js",
   "repository": "git@github.com:luanpotter/labs.git",
   "author": "Luan Nico <luanpotter27@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "labs-integration": "^0.1.17"
+    "labs-integration": "^0.1.19"
   }
 }

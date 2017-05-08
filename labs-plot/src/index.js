@@ -42,7 +42,7 @@ const plot = (originTable, names, fit, name, cb) => {
         type: 'scatter'
     });
     if (fit) {
-        let xs = [table[0][0], table[0].slice(-1).pop()];
+        let xs = [table[0].reduce((a, b) => Math.min(a, b)), table[0].reduce((a, b) => Math.max(a, b))];
         let f = x => fit[0].value.times(new Decimal(x)).plus(fit[1].value).toFixed();
         traces.push({
             x: xs,
@@ -53,7 +53,7 @@ const plot = (originTable, names, fit, name, cb) => {
     }
 
     let graphOptions = {
-        filename: 'labs-chart',
+        filename: 'labs-chart-2',
         fileopt: 'overwrite',
         layout: {
             xaxis: names[0],
@@ -62,6 +62,7 @@ const plot = (originTable, names, fit, name, cb) => {
     };
     build(plotly => {
         plotly.plot(traces, graphOptions, function(error, data) {
+            if (error) console.error(error);
             download(data.url + '.png', name + '.png', cb);
         });
     });
