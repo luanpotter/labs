@@ -29,4 +29,5 @@ const run = (metal, n0, xs, ns) => {
 	env.plot(['x', 'y'], 'ln', 'results(n/n0) por x para o ' + metal, 'mu_' + metal);
 };
 
+// run('co-al-p1', [423, 1], 
 // run('pb', ...)

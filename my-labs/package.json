@@ -7,6 +7,7 @@
   "author": "Luan Nico",
   "license": "MIT",
   "dependencies": {
+    "cartesian-product": "^2.1.2",
     "jimp": "^0.2.27",
     "labs": "2.0.2",
     "linear-solve": "^1.2.1"
