@@ -1,0 +1,24 @@
+const fitter = require('labs-fitter');
+const Decimal = require('decimal.js');
+
+const ERRO = new Decimal(0.05);
+
+const erro_v = v => ERRO.times(v);
+const erro_i = i => ERRO.times(i);
+
+let tensoes_fonte = [ 31.5, 28.3, 25.2, 22, 18.8, 15.7, 12.5, 9.4, 6.2, 3.1, 0 ]; // V
+let corrente_fonte = [ .05, .04, .04, .03, .03, .02, .02, .01, .01, 0, 0 ]; // A
+
+let tensao_bobina = [ 19.4, 17.5, 15.5, 13.6, 11.6, 9.7, 7.7, 5.8, 3.9, 1.9, 0 ]; // mV
+let corrente_bobina = [ 50.01, 45.01, 40.01, 34.97, 29.99, 25, 19.98, 14.99, 10, 5, 0 ]; // mA
+
+let toD = e => new Decimal(e);
+let toV = e => ({ value : toD(e), error: erro_v(toD(e)) });
+let toI = e => ({ value : toD(e), error: erro_i(toD(e)) });
+
+let xv = corrente_bobina.map(toI);
+let yv = tensao_bobina.map(toV);
+
+let r = fitter.fitLin(xv, yv);
+
+console.log(r);

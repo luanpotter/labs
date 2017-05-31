@@ -1,0 +1,39 @@
+\section{Resistência do Filamento de Tungstênio}
+
+Foi montado o circuito esquematizado na Figura \ref{fig:esquema-circuito}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURA fig:esquema-circuito
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Foram tomadas algumas medidas de segurança para garantir que a corrente no filamento de tungstênio ($W$) não ultrapasse 50 mA, que é um limite razoável de operação do dispositivo. Foi medida a tensão máxima que fonte poderia fornecer nessa corrente; o valor encontrado foi $31.5V$. Dessa forma, foi adicionado um resistor de segurança, cujo valor foi calculado como $R = \frac{U}{I} = \frac{31.5 V}{50 mA} = 630 \Omega$. Para isso, utilizou-se uma resistência variável como a da Figura \ref{fig:foto-resistencia}. Além disso, antes de ligar o filamento foi colocado o circuito em curto para garantir que os valores estavam dentro do esperado.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURA fig:foto-resistencia
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Depois de realizados esses procedimentos de segurança, foram medidos os valores de corrente e tensão nos pontos demarcados. A Tabela \ref{tab:u-i-filamento} contém esses dados, para diversos valores de corrente.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TABELA tab:u-i-filamento
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sabemos que nesse regime o comportamento deve seguir aproximadamente a Lei de Ohm, de forma que foi possível fazer uma regressão linear com os dados obtidos. Esse gráfico pode ser observado na Figura \ref{fig:u-i-filamento}, e os valores encontrados para os coeficientes $m$ e $b$ da reta $U = m \cdot I + b$ foram:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURA fig:u-i-filamento (gráfico)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{equation}
+m = (0.387 \pm 0.006) \Omega
+\end{equation}
+
+E
+
+\begin{equation}
+b = (0 \pm 3) \cdot 10^{-501} V
+\end{equation}
+
+Como previsto, o valor de $b$ foi praticamente nulo, com extrema precisão.
+
+Com esse valor de $m$, 
