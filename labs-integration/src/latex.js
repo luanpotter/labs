@@ -32,7 +32,8 @@ let Latex = (function() {
     function header(env, name, dm) {
         let variable = env.vars[name];
         let unit = env.fetchUnit(variable);
-        return '$' + variable.name + (unit === '' ? '' : ' (' + dm + unit + ')') + '$';
+        let displayName = variable.latexName || variable.name;
+        return '$' + displayName + (unit === '' ? '' : ' (' + dm + (dm === '\\mu' ? ' ' : '') + unit + ')') + '$';
     }
 
     Latex.latexTable = function(names, env) {
